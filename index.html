@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mirza ping</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#1e1b4b",
+              secondary: "#3730a3",
+              accent: "#6366f1",
+              purple: "#7c3aed",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+      body {
+        font-family: "Inter", sans-serif;
+      }
+
+      .gradient-bg {
+        background: linear-gradient(
+          135deg,
+          #1e1b4b 0%,
+          #312e81 25%,
+          #3730a3 50%,
+          #4338ca 75%,
+          #6366f1 100%
+        );
+      }
+
+      .card-gradient {
+        background: linear-gradient(
+          135deg,
+          rgba(30, 27, 75, 0.8) 0%,
+          rgba(55, 48, 163, 0.8) 100%
+        );
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+      }
+
+      .pulse-animation {
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .ping-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        animation: pingPulse 1.5s infinite;
+      }
+
+      @keyframes pingPulse {
+        0% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 0.7;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .good {
+        background-color: #10b981;
+      }
+      .average {
+        background-color: #f59e0b;
+      }
+      .poor {
+        background-color: #ef4444;
+      }
+
+      .rtl {
+        direction: rtl;
+      }
+      .ltr {
+        direction: ltr;
+      }
+    </style>
+  </head>
+  <body class="gradient-bg min-h-screen text-white">
+    <div class="container mx-auto px-4 py-8">
+      <!-- Header -->
+      <header class="text-center mb-8">
+        <div class="flex justify-between items-center mb-6">
+          <h1 class="text-3xl md:text-4xl font-bold" id="title">mirza ping</h1>
+          <button
+            onclick="toggleLanguage()"
+            class="bg-accent hover:bg-purple-600 px-4 py-2 rounded-lg transition-all duration-300 font-medium"
+          >
+            <span id="langBtn">EN</span>
+          </button>
+        </div>
+        <p class="text-lg opacity-80 max-w-2xl mx-auto" id="subtitle">
+          سرعت اتصال به سرورهای مختلف را تست کنید و بهترین گزینه را انتخاب کنید
+        </p>
+      </header>
+
+      <!-- Test Servers Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- Fastly -->
+        <div class="card-gradient rounded-xl p-6 text-center">
+          <div class="mb-4">
+            <div
+              class="w-16 h-16 bg-red-500 rounded-full mx-auto flex items-center justify-center mb-3"
+            >
+              <svg
+                class="w-8 h-8 text-white"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"
+                />
+                <path
+                  d="M19.5 12.5L20.5 15.5L23.5 16.5L20.5 17.5L19.5 20.5L18.5 17.5L15.5 16.5L18.5 15.5L19.5 12.5Z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Fastly</h3>
+            <div class="flex items-center justify-center mb-3">
+              <div class="ping-dot mr-2" id="fastly-dot"></div>
+              <span id="fastly-status" class="text-sm opacity-70"
+                >آماده تست</span
+              >
+            </div>
+            <div class="text-2xl font-bold mb-2" id="fastly-ping">-- ms</div>
+            <button
+              onclick="testPing('fastly')"
+              class="w-full bg-red-500 hover:bg-red-600 py-2 rounded-lg transition-all duration-300 font-medium"
+              id="fastly-btn"
+            >
+              تست پینگ
+            </button>
+          </div>
+        </div>
+
+        <!-- Gcore -->
+        <div class="card-gradient rounded-xl p-6 text-center">
+          <div class="mb-4">
+            <div
+              class="w-16 h-16 bg-green-500 rounded-full mx-auto flex items-center justify-center mb-3"
+            >
+              <svg
+                class="w-8 h-8 text-white"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
+                <path
+                  d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c1.66 0 3.16-.67 4.24-1.76l-1.41-1.41C14.1 15.54 13.11 16 12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4c1.11 0 2.1.46 2.83 1.17l1.41-1.41C15.16 6.67 13.66 6 12 6z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Gcore</h3>
+            <div class="flex items-center justify-center mb-3">
+              <div class="ping-dot mr-2" id="gcore-dot"></div>
+              <span id="gcore-status" class="text-sm opacity-70"
+                >آماده تست</span
+              >
+            </div>
+            <div class="text-2xl font-bold mb-2" id="gcore-ping">-- ms</div>
+            <button
+              onclick="testPing('gcore')"
+              class="w-full bg-green-500 hover:bg-green-600 py-2 rounded-lg transition-all duration-300 font-medium"
+              id="gcore-btn"
+            >
+              تست پینگ
+            </button>
+          </div>
+        </div>
+        <!-- Cloudflare -->
+        <div class="card-gradient rounded-xl p-6 text-center">
+          <div class="mb-4">
+            <div
+              class="w-16 h-16 bg-blue-500 rounded-full mx-auto flex items-center justify-center mb-3"
+            >
+              <svg
+                class="w-8 h-8 text-white"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"
+                />
+                <path d="M7 12l5 5 5-5H7z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Cloudflare</h3>
+            <div class="flex items-center justify-center mb-3">
+              <div class="ping-dot mr-2" id="cloudflare-dot"></div>
+              <span id="cloudflare-status" class="text-sm opacity-70"
+                >آماده تست</span
+              >
+            </div>
+            <div class="text-2xl font-bold mb-2" id="cloudflare-ping">
+              -- ms
+            </div>
+            <button
+              onclick="testPing('cloudflare')"
+              class="w-full bg-blue-500 hover:bg-blue-600 py-2 rounded-lg transition-all duration-300 font-medium"
+              id="cloudflare-btn"
+            >
+              تست پینگ
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Test All Button -->
+      <div class="text-center mb-8">
+        <button
+          onclick="testAllServers()"
+          class="bg-accent hover:bg-purple-600 px-8 py-3 rounded-lg text-lg font-semibold transition-all duration-300 shadow-lg"
+          id="testAllBtn"
+        >
+          تست همه سرورها
+        </button>
+      </div>
+
+      <!-- Results Summary -->
+      <div class="card-gradient rounded-xl p-6 mb-8">
+        <h3 class="text-xl font-semibold mb-4" id="resultsTitle">
+          خلاصه نتایج
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="results">
+          <div class="text-center opacity-50" id="noResults">
+            هنوز تستی انجام نشده است
+          </div>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="card-gradient rounded-xl p-6">
+        <h4 class="font-semibold mb-3" id="legendTitle">راهنما:</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+          <div class="flex items-center">
+            <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+            <span id="excellent">عالی (< 100ms)</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+            <span id="average">متوسط (100-300ms)</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+            <span id="slow">کند (> 300ms)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentLang = "fa";
+      let testResults = {};
+
+      const translations = {
+        fa: {
+          title: "mirza ping",
+          subtitle:
+            "سرعت اتصال به سرورهای مختلف را تست کنید و بهترین گزینه را انتخاب کنید",
+          testPing: "تست پینگ",
+          testAll: "تست همه سرورها",
+          resultsTitle: "خلاصه نتایج",
+          noResults: "هنوز تستی انجام نشده است",
+          legendTitle: "راهنما:",
+          excellent: "عالی (< 100ms)",
+          average: "متوسط (100-300ms)",
+          slow: "کند (> 300ms)",
+          ready: "آماده تست",
+          testing: "در حال تست...",
+          error: "خطا در اتصال",
+          langBtn: "EN",
+        },
+        en: {
+          title: "mirza ping",
+          subtitle:
+            "Test connection speed to different servers and choose the best option",
+          testPing: "Test Ping",
+          testAll: "Test All Servers",
+          resultsTitle: "Results Summary",
+          noResults: "No tests performed yet",
+          legendTitle: "Legend:",
+          excellent: "Excellent (< 100ms)",
+          average: "Average (100-300ms)",
+          slow: "Slow (> 300ms)",
+          ready: "Ready to test",
+          testing: "Testing...",
+          error: "Connection error",
+          langBtn: "فا",
+        },
+      };
+
+      const servers = {
+        // fastly may block direct probes from some browsers/environments;
+        // try primary URL first, then a reliable fallback (Google generate_204).
+        fastly: "https://www.fastly.com",
+        gcore: "https://gcore.com",
+        cloudflare: "https://cp.cloudflare.com",
+      };
+
+      // Optimization settings
+      const PING_ATTEMPTS = 3; // number of tries per server
+      const REQUEST_TIMEOUT = 3000; // ms per attempt
+      const CACHE_BUST = () =>
+        `?cb=${Date.now()}_${Math.floor(Math.random() * 100000)}`;
+
+      // helper: fetch with timeout
+      function fetchWithTimeout(url, options = {}, timeout = REQUEST_TIMEOUT) {
+        return Promise.race([
+          fetch(url, options),
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("timeout")), timeout)
+          ),
+        ]);
+      }
+
+      function median(arr) {
+        const a = arr.slice().sort((x, y) => x - y);
+        const m = Math.floor(a.length / 2);
+        return a.length % 2 ? a[m] : Math.round((a[m - 1] + a[m]) / 2);
+      }
+
+      function toggleLanguage() {
+        currentLang = currentLang === "fa" ? "en" : "fa";
+        document.documentElement.lang = currentLang;
+        document.documentElement.dir = currentLang === "fa" ? "rtl" : "ltr";
+        updateTexts();
+      }
+
+      function updateTexts() {
+        const t = translations[currentLang];
+        document.title = t.title;
+        document.getElementById("title").textContent = t.title;
+        document.getElementById("subtitle").textContent = t.subtitle;
+        document.getElementById("testAllBtn").textContent = t.testAll;
+        document.getElementById("resultsTitle").textContent = t.resultsTitle;
+        document.getElementById("legendTitle").textContent = t.legendTitle;
+        document.getElementById("excellent").textContent = t.excellent;
+        document.getElementById("average").textContent = t.average;
+        document.getElementById("slow").textContent = t.slow;
+        document.getElementById("langBtn").textContent = t.langBtn;
+
+        // Update button texts
+        document.getElementById("fastly-btn").textContent = t.testPing;
+        document.getElementById("gcore-btn").textContent = t.testPing;
+
+        // Update status texts
+        document.getElementById("fastly-status").textContent = t.ready;
+        document.getElementById("gcore-status").textContent = t.ready;
+
+        updateResults();
+      }
+
+      async function testPing(serverName) {
+        const button = document.getElementById(`${serverName}-btn`);
+        const status = document.getElementById(`${serverName}-status`);
+        const pingElement = document.getElementById(`${serverName}-ping`);
+        const dot = document.getElementById(`${serverName}-dot`);
+
+        // UI: start
+        dot.className = "ping-dot mr-2 pulse-animation";
+        button.disabled = true;
+        button.style.opacity = "0.6";
+        status.textContent = translations[currentLang].testing;
+
+        const successfulPings = [];
+        const candidates = Array.isArray(servers[serverName])
+          ? servers[serverName]
+          : [servers[serverName]];
+
+        const probeUrlFor = (candidate) => {
+          // if candidate contains a path (like generate_204), use it as-is,
+          // otherwise probe favicon.ico
+          try {
+            const u = new URL(candidate);
+            return /\/[^\/]+$/.test(u.pathname)
+              ? candidate
+              : candidate.replace(/\/$/, "") + "/favicon.ico";
+          } catch (e) {
+            return candidate.replace(/\/$/, "") + "/favicon.ico";
+          }
+        };
+
+        for (let i = 0; i < PING_ATTEMPTS; i++) {
+          let attemptSucceeded = false;
+          for (const candidate of candidates) {
+            const url = probeUrlFor(candidate) + CACHE_BUST();
+            const start = performance.now();
+            try {
+              await fetchWithTimeout(
+                url,
+                { method: "GET", mode: "no-cors" },
+                REQUEST_TIMEOUT
+              );
+              const duration = Math.round(performance.now() - start);
+              successfulPings.push(duration);
+              attemptSucceeded = true;
+              break; // on this attempt use first successful candidate
+            } catch (e) {
+              // try next candidate
+            }
+          }
+          // small delay between attempts to avoid bursts
+          await new Promise((r) => setTimeout(r, 120));
+          // if none of the candidates worked in this attempt, continue to next attempt
+        }
+
+        if (successfulPings.length === 0) {
+          testResults[serverName] = null;
+          pingElement.textContent = "-- ms";
+          dot.className = "ping-dot mr-2 poor";
+          status.textContent = translations[currentLang].error;
+        } else {
+          // prefer median to reduce outliers
+          const value = median(successfulPings);
+          testResults[serverName] = value;
+          pingElement.textContent = `${value} ms`;
+
+          if (value < 100) {
+            dot.className = "ping-dot mr-2 good";
+            status.textContent = translations[currentLang].excellent;
+          } else if (value < 300) {
+            dot.className = "ping-dot mr-2 average";
+            status.textContent = translations[currentLang].average;
+          } else {
+            dot.className = "ping-dot mr-2 poor";
+            status.textContent = translations[currentLang].slow;
+          }
+        }
+
+        button.disabled = false;
+        button.style.opacity = "1";
+        updateResults();
+      }
+
+      async function testAllServers() {
+        const testAllBtn = document.getElementById("testAllBtn");
+        testAllBtn.disabled = true;
+        testAllBtn.style.opacity = "0.6";
+
+        // Run all tests concurrently for speed; UI updates per-test are handled inside testPing
+        const promises = Object.keys(servers).map((name) => testPing(name));
+        await Promise.allSettled(promises);
+
+        testAllBtn.disabled = false;
+        testAllBtn.style.opacity = "1";
+      }
+
+      function updateResults() {
+        const resultsContainer = document.getElementById("results");
+        const noResults = document.getElementById("noResults");
+
+        if (
+          Object.keys(testResults).length === 0 ||
+          Object.values(testResults).every((v) => v === null)
+        ) {
+          noResults.style.display = "block";
+          resultsContainer.innerHTML =
+            '<div class="text-center opacity-50" id="noResults">' +
+            translations[currentLang].noResults +
+            "</div>";
+          return;
+        }
+
+        const sortedResults = Object.entries(testResults)
+          .filter(([_, ping]) => ping !== null)
+          .sort(([_, a], [__, b]) => a - b);
+
+        let resultsHTML = "";
+        sortedResults.forEach(([server, ping], index) => {
+          const rank = index + 1;
+          let badgeClass = "bg-green-500";
+          let badgeText = "🥇";
+
+          if (rank === 2) {
+            badgeClass = "bg-yellow-500";
+            badgeText = "🥈";
+          } else if (rank === 3) {
+            badgeClass = "bg-orange-500";
+            badgeText = "🥉";
+          } else if (rank > 3) {
+            badgeClass = "bg-gray-500";
+            badgeText = rank;
+          }
+
+          resultsHTML += `
+                    <div class="text-center p-4 bg-white bg-opacity-10 rounded-lg">
+                        <div class="text-2xl mb-2">${badgeText}</div>
+                        <div class="font-semibold capitalize">${server}</div>
+                        <div class="text-lg font-bold">${ping} ms</div>
+                    </div>
+                `;
+        });
+
+        resultsContainer.innerHTML = resultsHTML;
+      }
+
+      // Initialize the page
+      updateTexts();
+    </script>
+  </body>
+</html>
