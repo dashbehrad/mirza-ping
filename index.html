@@ -10,7 +10,6 @@
         padding: 0;
         box-sizing: border-box;
       }
-
       body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         background: linear-gradient(
@@ -23,13 +22,11 @@
         color: #fff;
         overflow-x: hidden;
       }
-
       .container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
       }
-
       header {
         display: flex;
         justify-content: space-between;
@@ -37,13 +34,11 @@
         padding: 20px 0;
         margin-bottom: 40px;
       }
-
       .logo-section {
         display: flex;
         align-items: center;
         gap: 15px;
       }
-
       .logo {
         width: 60px;
         height: 60px;
@@ -54,19 +49,17 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 24px;
+        font-size: 20px;
         box-shadow: 0 8px 32px rgba(138, 43, 226, 0.2);
       }
-
       .site-title {
         font-size: 32px;
-        font-weight: bold;
+        font-weight: 700;
         background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
       }
-
       .lang-switch {
         background: rgba(255, 255, 255, 0.1);
         backdrop-filter: blur(10px);
@@ -78,7 +71,6 @@
         color: #fff;
         font-size: 14px;
       }
-
       .lang-switch:hover {
         background: rgba(138, 43, 226, 0.3);
         transform: translateY(-2px);
@@ -94,14 +86,12 @@
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         margin-bottom: 30px;
       }
-
       .info-cards {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 20px;
-        margin-bottom: 30px;
+        margin-bottom: 10px;
       }
-
       .info-card {
         background: rgba(255, 255, 255, 0.08);
         backdrop-filter: blur(15px);
@@ -111,39 +101,49 @@
         text-align: center;
         transition: all 0.3s;
       }
-
       .info-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 12px 24px rgba(138, 43, 226, 0.3);
       }
-
       .info-label {
         font-size: 14px;
         color: #a8a8a8;
         margin-bottom: 10px;
       }
-
       .info-value {
         font-size: 18px;
-        font-weight: bold;
+        font-weight: 700;
         color: #667eea;
+        word-break: break-word;
+      }
+      .ip-fallback {
+        text-align: center;
+        margin: 12px 0 0;
+        font-size: 13px;
+        color: rgba(234, 240, 255, 0.7);
+      }
+      .ip-fallback a {
+        color: #8fb3ff;
+        text-decoration: none;
+        border-bottom: 1px dashed rgba(143, 179, 255, 0.55);
+      }
+      .ip-fallback a:hover {
+        opacity: 0.9;
       }
 
       .speed-display {
         text-align: center;
         margin: 40px 0;
       }
-
       .main-speed {
         font-size: 72px;
-        font-weight: bold;
+        font-weight: 800;
         background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
         margin-bottom: 10px;
       }
-
       .speed-label {
         font-size: 24px;
         color: #a8a8a8;
@@ -154,9 +154,8 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: 20px;
-        margin-bottom: 40px;
+        margin-bottom: 30px;
       }
-
       .metric-box {
         background: rgba(255, 255, 255, 0.08);
         backdrop-filter: blur(15px);
@@ -165,14 +164,12 @@
         border: 1px solid rgba(138, 43, 226, 0.3);
         text-align: center;
       }
-
       .metric-value {
         font-size: 36px;
-        font-weight: bold;
+        font-weight: 800;
         color: #667eea;
         margin-bottom: 5px;
       }
-
       .metric-label {
         font-size: 14px;
         color: #a8a8a8;
@@ -184,11 +181,10 @@
         border-radius: 20px;
         padding: 30px;
         border: 1px solid rgba(138, 43, 226, 0.3);
-        margin-bottom: 30px;
+        margin-bottom: 20px;
         height: 300px;
         position: relative;
       }
-
       canvas {
         width: 100% !important;
         height: 100% !important;
@@ -200,7 +196,7 @@
         padding: 18px 60px;
         border-radius: 50px;
         font-size: 20px;
-        font-weight: bold;
+        font-weight: 800;
         color: #fff;
         cursor: pointer;
         transition: all 0.3s;
@@ -208,12 +204,10 @@
         display: block;
         margin: 0 auto;
       }
-
       .start-btn:hover:not(:disabled) {
         transform: translateY(-3px);
         box-shadow: 0 12px 40px rgba(102, 126, 234, 0.6);
       }
-
       .start-btn:disabled {
         opacity: 0.5;
         cursor: not-allowed;
@@ -227,7 +221,6 @@
         overflow: hidden;
         margin: 30px 0;
       }
-
       .progress-fill {
         height: 100%;
         background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
@@ -240,21 +233,33 @@
         text-align: center;
         color: #a8a8a8;
         font-size: 16px;
-        margin-top: 20px;
+        margin-top: 12px;
       }
-
+      .debug {
+        margin-top: 14px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid rgba(138, 43, 226, 0.25);
+        background: rgba(255, 255, 255, 0.06);
+        font-size: 12px;
+        color: rgba(234, 240, 255, 0.85);
+        line-height: 1.6;
+        white-space: pre-wrap;
+        user-select: text;
+      }
       [dir="ltr"] {
         text-align: left;
       }
-
       [dir="ltr"] .info-card,
       [dir="ltr"] .metric-box,
       [dir="ltr"] .speed-display,
-      [dir="ltr"] .status-text {
+      [dir="ltr"] .status-text,
+      [dir="ltr"] .ip-fallback {
         text-align: center;
       }
     </style>
   </head>
+
   <body>
     <div class="container">
       <header>
@@ -278,11 +283,23 @@
             <div class="info-value" id="ip">در حال بارگذاری...</div>
           </div>
           <div class="info-card">
-            <div class="info-label" data-fa="ارائه‌دهنده اینترنت" data-en="ISP">
-              ارائه‌دهنده اینترنت
+            <div
+              class="info-label"
+              data-fa="ارائه‌دهنده اینترنت (ISP/AS)"
+              data-en="ISP / AS"
+            >
+              ارائه‌دهنده اینترنت (ISP/AS)
             </div>
             <div class="info-value" id="isp">در حال بارگذاری...</div>
           </div>
+        </div>
+
+        <div class="ip-fallback">
+          <span data-fa="اگر نمایش IP/ISP مشکل داشت:" data-en="If IP/ISP fails:"
+            >اگر نمایش IP/ISP مشکل داشت:</span
+          >
+          <a href="https://ipv8.net" target="_blank" rel="noopener">ipv8.net</a>
+          <span data-fa="را باز کن" data-en="open it">را باز کن</span>
         </div>
 
         <div class="speed-display">
@@ -310,16 +327,6 @@
             </div>
           </div>
           <div class="metric-box">
-            <div class="metric-value" id="upload">0</div>
-            <div
-              class="metric-label"
-              data-fa="آپلود (Mbps)"
-              data-en="Upload (Mbps)"
-            >
-              آپلود (Mbps)
-            </div>
-          </div>
-          <div class="metric-box">
             <div class="metric-value" id="jitter">0</div>
             <div class="metric-label" data-fa="جیتر (ms)" data-en="Jitter (ms)">
               جیتر (ms)
@@ -327,9 +334,7 @@
           </div>
         </div>
 
-        <div class="chart-container">
-          <canvas id="speedChart"></canvas>
-        </div>
+        <div class="chart-container"><canvas id="speedChart"></canvas></div>
 
         <div class="progress-bar">
           <div class="progress-fill" id="progress"></div>
@@ -347,14 +352,31 @@
         <button class="start-btn" id="startBtn" onclick="startTest()">
           <span data-fa="شروع تست" data-en="Start Test">شروع تست</span>
         </button>
+
+        <div class="debug" id="debug">Debug: ready.</div>
       </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script>
       let currentLang = "fa";
-      let chart;
       let isTestRunning = false;
+
+      const WORKER_URL = "https://speedtest.vcmail.workers.dev".replace(
+        /\/+$/,
+        ""
+      );
+      const DOWNLOAD_URL = WORKER_URL + "/down?bytes=25000000";
+
+      const dbgEl = document.getElementById("debug");
+      function dbg(msg) {
+        const t = new Date().toLocaleTimeString();
+        dbgEl.textContent = (`[${t}] ${msg}\n` + dbgEl.textContent).slice(
+          0,
+          2400
+        );
+        console.log("[DBG]", msg);
+      }
 
       let chartData = {
         labels: [],
@@ -372,25 +394,18 @@
       };
 
       const ctx = document.getElementById("speedChart").getContext("2d");
-      chart = new Chart(ctx, {
+      const chart = new Chart(ctx, {
         type: "line",
         data: chartData,
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-          },
+          plugins: { legend: { display: false } },
           scales: {
             y: {
               beginAtZero: true,
               grid: { color: "rgba(255, 255, 255, 0.1)" },
-              ticks: {
-                color: "#a8a8a8",
-                callback: function (value) {
-                  return value + " Mbps";
-                },
-              },
+              ticks: { color: "#a8a8a8", callback: (v) => v + " Mbps" },
             },
             x: {
               grid: { color: "rgba(255, 255, 255, 0.1)" },
@@ -408,69 +423,23 @@
           "dir",
           currentLang === "fa" ? "rtl" : "ltr"
         );
-
         document.querySelectorAll("[data-fa]").forEach((el) => {
           const text = el.getAttribute("data-" + currentLang);
           if (text) el.textContent = text;
         });
       }
 
-      // ✅ FIXED: Reliable IP + ISP (ipapi.is with ipinfo.io fallback)
-      async function getIPInfo() {
-        const setUI = (ip, isp) => {
-          document.getElementById("ip").textContent = ip || "Unknown";
-          document.getElementById("isp").textContent = isp || "Unknown";
-        };
+      function sleep(ms) {
+        return new Promise((r) => setTimeout(r, ms));
+      }
 
-        const fetchWithTimeout = async (url, timeoutMs = 6500) => {
-          const controller = new AbortController();
-          const timer = setTimeout(() => controller.abort(), timeoutMs);
-          try {
-            const res = await fetch(url, {
-              cache: "no-cache",
-              signal: controller.signal,
-            });
-            return res;
-          } finally {
-            clearTimeout(timer);
-          }
-        };
-
-        try {
-          // 1) ipapi.is
-          const r1 = await fetchWithTimeout("https://api.ipapi.is");
-          if (r1.ok) {
-            const d1 = await r1.json();
-            const ip = d1.ip || d1.ipAddress || "Unknown";
-            const isp =
-              (d1.company && d1.company.name) ||
-              (d1.asn && (d1.asn.org || d1.asn.organization)) ||
-              d1.isp ||
-              d1.organization ||
-              "Unknown";
-            setUI(ip, isp);
-            return;
-          }
-          throw new Error("ipapi.is failed");
-        } catch (e1) {
-          try {
-            // 2) fallback: ipinfo.io
-            const r2 = await fetchWithTimeout("https://ipinfo.io/json");
-            const d2 = await r2.json();
-
-            const ip = d2.ip || "Unknown";
-
-            // org: "ASxxxx Company Name" -> "Company Name"
-            let isp = d2.org || d2.hostname || "";
-            if (typeof isp === "string") {
-              isp = isp.replace(/^AS\d+\s*/i, "").trim();
-            }
-            setUI(ip, isp || "Unknown");
-          } catch (e2) {
-            console.error("Error fetching IP info:", e1, e2);
-            setUI("Error", "Error");
-          }
-        }
+      function fetchWithTimeout(url, timeoutMs = 8000, fetchOptions = {}) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+        return fetch(url, {
+          ...fetchOptions,
+          signal: controller.signal,
+        }).finally(() => clearTimeout(timer));
       }
 
       function updateStatus(faText, enText) {
@@ -480,82 +449,228 @@
         statusEl.textContent = currentLang === "fa" ? faText : enText;
       }
 
-      // helper: اضافه کردن نقطه لحظه‌ای به چارت
       function pushChartPoint(speedMbps, startMs) {
         const elapsed = ((performance.now() - startMs) / 1000).toFixed(1);
         chartData.labels.push(elapsed + "s");
         chartData.datasets[0].data.push(Number(speedMbps.toFixed(2)));
+        if (chartData.labels.length > 80) {
+          chartData.labels.shift();
+          chartData.datasets[0].data.shift();
+        }
         chart.update();
       }
 
+      // -------- IP/ISP helpers --------
+      function pickFirst(...vals) {
+        for (const v of vals) {
+          if (typeof v === "string" && v.trim()) return v.trim();
+        }
+        return "";
+      }
+
+      function normalizeISPFields(d) {
+        // تا حد ممکن از انواع فیلدها ISP/ORG/AS رو استخراج کن
+        const ip = pickFirst(d.ip, d.query, d.address, d.ip_address);
+
+        // common org/isp fields
+        const isp = pickFirst(
+          d.isp,
+          d.org,
+          d.organization,
+          d.asn_organization,
+          d.as_org,
+          d.asOrganization,
+          d.operator,
+          d.provider
+        );
+
+        // ipwho.is style
+        const connISP = d.connection
+          ? pickFirst(d.connection.isp, d.connection.org)
+          : "";
+
+        // ipapi style (sometimes org)
+        const ipapiOrg = pickFirst(d.org, d.asn, d.network);
+
+        // nested "as" object styles
+        const asName = d.as
+          ? pickFirst(d.as.name, d.as.domain, d.as.organization)
+          : "";
+        const asn = pickFirst(
+          d.asn,
+          d.as_number ? String(d.as_number) : "",
+          d.asn_number ? String(d.asn_number) : "",
+          d.as && d.as.asn ? String(d.as.asn) : "",
+          d.asn ? String(d.asn) : ""
+        );
+
+        const finalIsp = pickFirst(isp, connISP, asName, ipapiOrg);
+        const finalAs = pickFirst(
+          // نمایش AS کمک می‌کنه حتی اگر ISP دقیق نبود
+          asn ? "AS" + asn : "",
+          d.asn ? "AS" + d.asn : ""
+        );
+
+        const label = finalIsp
+          ? finalAs
+            ? `${finalIsp} (${finalAs})`
+            : finalIsp
+          : finalAs
+          ? finalAs
+          : "";
+
+        return { ip, ispLabel: label };
+      }
+
+      async function tryJson(url, timeoutMs = 4500) {
+        const r = await fetchWithTimeout(url, timeoutMs, { cache: "no-store" });
+        if (!r.ok) throw new Error("HTTP_" + r.status);
+        const data = await r.json().catch(() => null);
+        if (!data) throw new Error("BAD_JSON");
+        return data;
+      }
+
+      function setIPISP(ip, ispText) {
+        document.getElementById("ip").textContent = ip || "Unknown";
+        document.getElementById("isp").textContent =
+          ispText || (currentLang === "fa" ? "نامشخص" : "Unknown");
+      }
+
+      async function getIPInfo() {
+        setIPISP("در حال شناسایی...", "در حال شناسایی...");
+        dbg("IP/ISP: start");
+
+        // 1) Worker first
+        try {
+          const d = await tryJson(WORKER_URL + "/?t=" + Date.now(), 5500);
+          const out = normalizeISPFields(d);
+          if (out.ip) {
+            setIPISP(
+              out.ip,
+              out.ispLabel || (currentLang === "fa" ? "نامشخص" : "Unknown")
+            );
+            dbg(
+              "IP/ISP: worker ok ip=" + out.ip + " isp=" + (out.ispLabel || "")
+            );
+            return;
+          }
+          dbg("IP/ISP: worker json but no ip");
+        } catch (e) {
+          dbg("IP/ISP: worker fail " + (e?.message || e));
+        }
+
+        // 2) Public fallbacks
+        const candidates = [
+          { name: "ipapi.co", url: "https://ipapi.co/json/" },
+          { name: "ipwho.is", url: "https://ipwho.is/" },
+          { name: "ifconfig.co", url: "https://ifconfig.co/json" },
+          { name: "ipify", url: "https://api.ipify.org?format=json" },
+        ];
+
+        for (const c of candidates) {
+          try {
+            dbg("IP/ISP: try " + c.name);
+            const d = await tryJson(
+              c.url + (c.url.includes("?") ? "&" : "?") + "t=" + Date.now(),
+              4500
+            );
+            const out = normalizeISPFields(d);
+            if (out.ip) {
+              setIPISP(
+                out.ip,
+                out.ispLabel || (currentLang === "fa" ? "نامشخص" : "Unknown")
+              );
+              dbg(
+                "IP/ISP: ok " +
+                  c.name +
+                  " ip=" +
+                  out.ip +
+                  " isp=" +
+                  (out.ispLabel || "")
+              );
+              return;
+            }
+          } catch (e) {
+            dbg("IP/ISP: fail " + c.name + " " + (e?.message || e));
+          }
+        }
+
+        setIPISP("Unknown", currentLang === "fa" ? "نامشخص" : "Unknown");
+        dbg("IP/ISP: all failed");
+      }
+
+      // ---------- Ping ----------
       async function measurePing() {
         updateStatus("در حال تست پینگ...", "Testing ping...");
+        dbg("Ping: start");
+
         const pingResults = [];
         const iterations = 5;
 
         for (let i = 0; i < iterations; i++) {
           const start = performance.now();
           try {
-            const img = new Image();
-            const loadPromise = new Promise((resolve) => {
-              img.onload = resolve;
-              img.onerror = resolve;
-            });
-            img.src = "https://cp.cloudflare.com/generate_204?t=" + Date.now();
-            await loadPromise;
-
+            await fetchWithTimeout(
+              WORKER_URL + "/down?bytes=32&t=" + Date.now(),
+              3500,
+              { cache: "no-store" }
+            );
             const end = performance.now();
             const ping = end - start;
             pingResults.push(ping);
             document.getElementById("ping").textContent = ping.toFixed(0);
-          } catch (error) {
-            console.error("Ping error:", error);
+            dbg(`Ping sample ${i + 1}/${iterations}: ${ping.toFixed(0)}ms`);
+          } catch (e) {
+            dbg(
+              `Ping sample ${i + 1}/${iterations}: FAIL (${e?.message || e})`
+            );
           }
-
-          if (i < iterations - 1) {
-            await new Promise((resolve) => setTimeout(resolve, 600));
-          }
+          if (i < iterations - 1) await sleep(450);
         }
 
-        if (pingResults.length > 0) {
-          const avgPing =
-            pingResults.reduce((a, b) => a + b, 0) / pingResults.length;
-          const jitter = Math.sqrt(
-            pingResults
-              .map((p) => Math.pow(p - avgPing, 2))
-              .reduce((a, b) => a + b, 0) / pingResults.length
-          );
-
-          document.getElementById("ping").textContent = avgPing.toFixed(0);
-          document.getElementById("jitter").textContent = jitter.toFixed(1);
+        if (!pingResults.length) {
+          document.getElementById("ping").textContent = "0";
+          document.getElementById("jitter").textContent = "0";
+          dbg("Ping: all failed");
+          return;
         }
+
+        const avgPing =
+          pingResults.reduce((a, b) => a + b, 0) / pingResults.length;
+        const jitter = Math.sqrt(
+          pingResults
+            .map((p) => (p - avgPing) * (p - avgPing))
+            .reduce((a, b) => a + b, 0) / pingResults.length
+        );
+
+        document.getElementById("ping").textContent = avgPing.toFixed(0);
+        document.getElementById("jitter").textContent = jitter.toFixed(1);
+        dbg(
+          `Ping: done avg=${avgPing.toFixed(0)}ms jitter=${jitter.toFixed(1)}ms`
+        );
       }
 
-      // ✅ Real-time download speed (streaming)
+      // ---------- Download ----------
       async function measureDownload() {
         updateStatus("در حال تست سرعت دانلود...", "Testing download speed...");
-        const durationMs = 10000;
+        dbg("Download: start");
 
+        const durationMs = 10000;
         const startMs = performance.now();
         let lastTickMs = startMs;
         let bytesSinceTick = 0;
-
         const speeds = [];
 
         chartData.labels = [];
         chartData.datasets[0].data = [];
         chart.update();
 
-        // یک دانلودِ stream که در طول زمان سرعت لحظه‌ای را حساب کند
         while (performance.now() - startMs < durationMs && isTestRunning) {
           try {
-            const res = await fetch(
-              "https://speed.cloudflare.com/__down?bytes=25000000",
-              { cache: "no-cache" }
-            );
-
-            if (!res.body) throw new Error("Streaming not supported");
-
+            const res = await fetch(DOWNLOAD_URL + "&t=" + Date.now(), {
+              cache: "no-store",
+            });
+            if (!res.body) throw new Error("STREAM_UNSUPPORTED");
             const reader = res.body.getReader();
 
             while (isTestRunning) {
@@ -563,28 +678,22 @@
               if (done) break;
 
               bytesSinceTick += value.byteLength;
-
               const now = performance.now();
+
               if (now - lastTickMs >= 250) {
                 const sec = (now - lastTickMs) / 1000;
                 const speedMbps = (bytesSinceTick * 8) / (sec * 1e6);
 
                 speeds.push(speedMbps);
-
-                // نمایش لحظه‌ای
                 document.getElementById("mainSpeed").textContent =
                   speedMbps.toFixed(2);
                 document.getElementById("download").textContent =
                   speedMbps.toFixed(2);
-
-                // چارت لحظه‌ای
                 pushChartPoint(speedMbps, startMs);
 
-                // reset tick
                 bytesSinceTick = 0;
                 lastTickMs = now;
 
-                // پایان زمان
                 if (now - startMs >= durationMs) {
                   try {
                     reader.cancel();
@@ -593,71 +702,25 @@
                 }
               }
             }
-          } catch (error) {
-            console.error("Download error:", error);
+          } catch (e) {
+            dbg("Download error: " + (e?.message || e));
             break;
           }
         }
 
-        if (speeds.length > 0) {
-          const avgSpeed = speeds.reduce((a, b) => a + b, 0) / speeds.length;
-          document.getElementById("download").textContent = avgSpeed.toFixed(2);
+        if (speeds.length) {
+          const avg = speeds.reduce((a, b) => a + b, 0) / speeds.length;
+          document.getElementById("download").textContent = avg.toFixed(2);
+          document.getElementById("mainSpeed").textContent = avg.toFixed(2);
+        } else {
+          document.getElementById("download").textContent = "0";
+          document.getElementById("mainSpeed").textContent = "0";
         }
+
+        dbg("Download: done");
       }
 
-      // ✅ Real-time upload speed (chunked requests)
-      async function measureUpload() {
-        updateStatus("در حال تست سرعت آپلود...", "Testing upload speed...");
-        const durationMs = 10000;
-
-        const startMs = performance.now();
-        const speeds = [];
-
-        chartData.labels = [];
-        chartData.datasets[0].data = [];
-        chart.update();
-
-        // chunk = 256KB (متعادل برای نمایش لحظه‌ای + فشار کمتر)
-        const chunkSize = 256 * 1024;
-        const chunk = new Uint8Array(chunkSize);
-        for (let i = 0; i < chunkSize; i++)
-          chunk[i] = (Math.random() * 256) | 0;
-
-        while (performance.now() - startMs < durationMs && isTestRunning) {
-          try {
-            const t0 = performance.now();
-            await fetch("https://speed.cloudflare.com/__up", {
-              method: "POST",
-              body: chunk,
-              cache: "no-cache",
-            });
-            const t1 = performance.now();
-
-            const sec = (t1 - t0) / 1000;
-            const speedMbps = (chunkSize * 8) / (sec * 1e6);
-
-            speeds.push(speedMbps);
-
-            // نمایش لحظه‌ای
-            document.getElementById("mainSpeed").textContent =
-              speedMbps.toFixed(2);
-            document.getElementById("upload").textContent =
-              speedMbps.toFixed(2);
-
-            // چارت لحظه‌ای
-            pushChartPoint(speedMbps, startMs);
-          } catch (error) {
-            console.error("Upload error:", error);
-            break;
-          }
-        }
-
-        if (speeds.length > 0) {
-          const avgSpeed = speeds.reduce((a, b) => a + b, 0) / speeds.length;
-          document.getElementById("upload").textContent = avgSpeed.toFixed(2);
-        }
-      }
-
+      // ---------- Main ----------
       async function startTest() {
         if (isTestRunning) return;
 
@@ -670,7 +733,6 @@
         document.getElementById("mainSpeed").textContent = "0";
         document.getElementById("ping").textContent = "0";
         document.getElementById("download").textContent = "0";
-        document.getElementById("upload").textContent = "0";
         document.getElementById("jitter").textContent = "0";
         progress.style.width = "0%";
 
@@ -678,29 +740,27 @@
         chartData.datasets[0].data = [];
         chart.update();
 
+        dbg("=== START TEST (NO UPLOAD) ===");
+        dbg("WORKER_URL=" + WORKER_URL);
+
         try {
           progress.style.width = "10%";
           await measurePing();
-          progress.style.width = "25%";
-
-          await new Promise((resolve) => setTimeout(resolve, 500));
-
           progress.style.width = "30%";
+
+          await sleep(400);
+
+          progress.style.width = "35%";
           await measureDownload();
-          progress.style.width = "60%";
-
-          await new Promise((resolve) => setTimeout(resolve, 500));
-
-          progress.style.width = "65%";
-          await measureUpload();
           progress.style.width = "100%";
 
           updateStatus(
             "تست با موفقیت انجام شد!",
             "Test completed successfully!"
           );
-        } catch (error) {
-          console.error("Test error:", error);
+          dbg("=== DONE ===");
+        } catch (e) {
+          dbg("Test error: " + (e?.message || e));
           updateStatus("خطا در انجام تست", "Error during test");
         }
 
@@ -708,6 +768,7 @@
         btn.disabled = false;
       }
 
+      // init
       getIPInfo();
     </script>
   </body>
