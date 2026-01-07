@@ -383,7 +383,6 @@
       let isTestRunning = false;
 
       // === بدون Workers: تست از فایل‌های GitHub Pages ===
-      // این فایل‌ها باید داخل ریپو باشند:
       // /assets/ping.bin (کوچک)
       // /assets/download.bin (بزرگ)
       const PING_URL = "./assets/ping.bin";
@@ -516,7 +515,6 @@
         for (let i = 0; i < iterations; i++) {
           const start = performance.now();
           try {
-            // cache-bust برای جلوگیری از کش
             await fetchWithTimeout(PING_URL + "?t=" + Date.now(), 3800, {
               cache: "no-store",
             });
@@ -555,67 +553,133 @@
         );
       }
 
+      // ====== Download (FIXED): چند اتصال موازی + محاسبه پایدار ======
+      function makeNoCacheUrl(base, extra) {
+        const sep = base.includes("?") ? "&" : "?";
+        return (
+          base +
+          sep +
+          "t=" +
+          Date.now() +
+          "&r=" +
+          Math.random() +
+          (extra ? "&" + extra : "")
+        );
+      }
+
       async function measureDownload() {
         updateStatus("در حال تست سرعت دانلود...", "Testing download speed...");
         dbg("Download: start");
 
         const durationMs = 10000;
         const startMs = performance.now();
-        let lastTickMs = startMs;
+
+        // تعداد اتصال موازی (مثل speedtest). 4 معمولاً خوبه.
+        const PARALLEL = 4;
+
+        // شمارنده بایت برای هر تیک
         let bytesSinceTick = 0;
         const speeds = [];
 
+        // ریست چارت
         chartData.labels = [];
         chartData.datasets[0].data = [];
         chart.update();
 
-        while (performance.now() - startMs < durationMs && isTestRunning) {
-          try {
-            // دانلود از فایل ثابت GitHub Pages + cache-bust
-            const res = await fetch(DOWNLOAD_URL + "?t=" + Date.now(), {
-              cache: "no-store",
-            });
-            if (!res.ok) throw new Error("HTTP_" + res.status);
-            if (!res.body) throw new Error("STREAM_UNSUPPORTED");
-            const reader = res.body.getReader();
+        // کنترل قطع دانلودها
+        const controllers = Array.from(
+          { length: PARALLEL },
+          () => new AbortController()
+        );
 
-            while (isTestRunning) {
-              const { value, done } = await reader.read();
-              if (done) break;
+        // هر worker تا پایان زمان تست، پشت‌سرهم دانلود می‌کشد (اگر فایل تمام شد، دوباره fetch می‌کند)
+        async function downloadWorker(i) {
+          let round = 0;
+          while (isTestRunning && performance.now() - startMs < durationMs) {
+            const url = makeNoCacheUrl(
+              DOWNLOAD_URL,
+              "w=" + i + "&round=" + round++
+            );
+            try {
+              const res = await fetch(url, {
+                cache: "no-store",
+                signal: controllers[i].signal,
+              });
+              if (!res.ok) throw new Error("HTTP_" + res.status);
+              if (!res.body) throw new Error("STREAM_UNSUPPORTED");
 
-              bytesSinceTick += value.byteLength;
-              const now = performance.now();
-
-              if (now - lastTickMs >= 250) {
-                const sec = (now - lastTickMs) / 1000;
-                const speedMbps = (bytesSinceTick * 8) / (sec * 1e6);
-
-                speeds.push(speedMbps);
-                document.getElementById("mainSpeed").textContent =
-                  speedMbps.toFixed(2);
-                document.getElementById("download").textContent =
-                  speedMbps.toFixed(2);
-                pushChartPoint(speedMbps, startMs);
-
-                bytesSinceTick = 0;
-                lastTickMs = now;
-
-                if (now - startMs >= durationMs) {
-                  try {
-                    reader.cancel();
-                  } catch {}
-                  break;
-                }
+              const reader = res.body.getReader();
+              while (
+                isTestRunning &&
+                performance.now() - startMs < durationMs
+              ) {
+                const { value, done } = await reader.read();
+                if (done) break;
+                bytesSinceTick += value.byteLength;
               }
+              try {
+                reader.cancel();
+              } catch {}
+            } catch (e) {
+              // اگر Abort شد، طبیعی است
+              if (controllers[i].signal.aborted) break;
+              dbg(`Download worker ${i} error: ${e?.message || e}`);
+              // کمی مکث و تلاش مجدد
+              await sleep(120);
             }
-          } catch (e) {
-            dbg("Download error: " + (e?.message || e));
-            break;
           }
         }
 
+        // تایمر محاسبه سرعت هر 250ms (پایدار و دقیق‌تر)
+        let lastTickMs = performance.now();
+        const tickTimer = setInterval(() => {
+          const now = performance.now();
+          const sec = (now - lastTickMs) / 1000;
+          if (sec <= 0) return;
+
+          const speedMbps = (bytesSinceTick * 8) / (sec * 1e6);
+          bytesSinceTick = 0;
+          lastTickMs = now;
+
+          // اگر هنوز داده‌ای نیومده، چارت رو اسپم نکن
+          if (!isFinite(speedMbps)) return;
+
+          speeds.push(speedMbps);
+          document.getElementById("mainSpeed").textContent =
+            speedMbps.toFixed(2);
+          document.getElementById("download").textContent =
+            speedMbps.toFixed(2);
+          pushChartPoint(speedMbps, startMs);
+        }, 250);
+
+        // اجرای دانلودهای موازی
+        const workers = [];
+        for (let i = 0; i < PARALLEL; i++) workers.push(downloadWorker(i));
+
+        // منتظر پایان زمان
+        while (performance.now() - startMs < durationMs && isTestRunning) {
+          await sleep(80);
+        }
+
+        // توقف دانلودها
+        for (const c of controllers) {
+          try {
+            c.abort();
+          } catch {}
+        }
+
+        // پاک کردن تایمر
+        clearInterval(tickTimer);
+
+        // منتظر بسته شدن workerها
+        try {
+          await Promise.allSettled(workers);
+        } catch {}
+
+        // میانگین سرعت (میانگین چند نمونه آخر، نوسان کمتر)
         if (speeds.length) {
-          const avg = speeds.reduce((a, b) => a + b, 0) / speeds.length;
+          const tail = speeds.slice(Math.max(0, speeds.length - 20)); // 20 تیک آخر
+          const avg = tail.reduce((a, b) => a + b, 0) / tail.length;
           document.getElementById("download").textContent = avg.toFixed(2);
           document.getElementById("mainSpeed").textContent = avg.toFixed(2);
         } else {
