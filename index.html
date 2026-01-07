@@ -116,6 +116,7 @@
         color: #667eea;
         word-break: break-word;
       }
+
       .ip-fallback {
         text-align: center;
         margin: 12px 0 0;
@@ -373,11 +374,12 @@
         const t = new Date().toLocaleTimeString();
         dbgEl.textContent = (`[${t}] ${msg}\n` + dbgEl.textContent).slice(
           0,
-          2400
+          2600
         );
         console.log("[DBG]", msg);
       }
 
+      // Chart
       let chartData = {
         labels: [],
         datasets: [
@@ -460,19 +462,71 @@
         chart.update();
       }
 
-      // -------- IP/ISP helpers --------
-      function pickFirst(...vals) {
-        for (const v of vals) {
-          if (typeof v === "string" && v.trim()) return v.trim();
+      // ----------------------------
+      // IP/ISP: Adaptive Providers
+      // ----------------------------
+      const ISP_STATS_KEY = "mirzaping_isp_provider_stats_v1";
+
+      function loadStats() {
+        try {
+          return JSON.parse(localStorage.getItem(ISP_STATS_KEY) || "{}");
+        } catch {
+          return {};
         }
+      }
+      function saveStats(stats) {
+        try {
+          localStorage.setItem(ISP_STATS_KEY, JSON.stringify(stats));
+        } catch {}
+      }
+
+      function recordProviderResult(id, ok, hasIsp, ms) {
+        const stats = loadStats();
+        const s = stats[id] || {
+          tries: 0,
+          ok: 0,
+          hasIsp: 0,
+          msSum: 0,
+          msCount: 0,
+        };
+        s.tries += 1;
+        if (ok) s.ok += 1;
+        if (hasIsp) s.hasIsp += 1;
+        if (typeof ms === "number" && isFinite(ms)) {
+          s.msSum += ms;
+          s.msCount += 1;
+        }
+        stats[id] = s;
+        saveStats(stats);
+      }
+
+      function providerScore(id, fallbackPriority) {
+        const stats = loadStats();
+        const s = stats[id];
+        if (!s || !s.tries) return 1000 - fallbackPriority * 10; // اولویت اولیه
+        const okRate = s.ok / s.tries; // 0..1
+        const ispRate = s.hasIsp / s.tries; // 0..1
+        const avgMs = s.msCount ? s.msSum / s.msCount : 9999;
+
+        // وزن‌دهی: ISP مهم‌تر از سرعت پاسخ
+        // امتیاز بالاتر = بهتر
+        return (
+          okRate * 1000 +
+          ispRate * 1200 +
+          Math.max(0, 500 - avgMs / 2) +
+          (1000 - fallbackPriority * 20)
+        );
+      }
+
+      function pickFirst(...vals) {
+        for (const v of vals)
+          if (typeof v === "string" && v.trim()) return v.trim();
         return "";
       }
 
       function normalizeISPFields(d) {
-        // تا حد ممکن از انواع فیلدها ISP/ORG/AS رو استخراج کن
         const ip = pickFirst(d.ip, d.query, d.address, d.ip_address);
 
-        // common org/isp fields
         const isp = pickFirst(
           d.isp,
           d.org,
@@ -481,53 +535,68 @@
           d.as_org,
           d.asOrganization,
           d.operator,
-          d.provider
+          d.provider,
+          d.company,
+          d.company_name
         );
 
-        // ipwho.is style
         const connISP = d.connection
           ? pickFirst(d.connection.isp, d.connection.org)
           : "";
 
-        // ipapi style (sometimes org)
-        const ipapiOrg = pickFirst(d.org, d.asn, d.network);
-
-        // nested "as" object styles
         const asName = d.as
           ? pickFirst(d.as.name, d.as.domain, d.as.organization)
           : "";
-        const asn = pickFirst(
+        const asnRaw = pickFirst(
           d.asn,
           d.as_number ? String(d.as_number) : "",
           d.asn_number ? String(d.asn_number) : "",
           d.as && d.as.asn ? String(d.as.asn) : "",
-          d.asn ? String(d.asn) : ""
+          d.as && d.as.number ? String(d.as.number) : ""
         );
 
-        const finalIsp = pickFirst(isp, connISP, asName, ipapiOrg);
-        const finalAs = pickFirst(
-          // نمایش AS کمک می‌کنه حتی اگر ISP دقیق نبود
-          asn ? "AS" + asn : "",
-          d.asn ? "AS" + d.asn : ""
-        );
+        const finalIsp = pickFirst(isp, connISP, asName);
+
+        let asLabel = "";
+        if (asnRaw) {
+          const n = asnRaw.replace(/^AS/i, "");
+          if (n) asLabel = "AS" + n;
+        } else if (d.as) {
+          const n2 = pickFirst(
+            d.as.asn ? String(d.as.asn) : "",
+            d.as.number ? String(d.as.number) : ""
+          );
+          if (n2) asLabel = "AS" + n2.replace(/^AS/i, "");
+        }
 
         const label = finalIsp
-          ? finalAs
-            ? `${finalIsp} (${finalAs})`
+          ? asLabel
+            ? `${finalIsp} (${asLabel})`
             : finalIsp
-          : finalAs
-          ? finalAs
+          : asLabel
+          ? asLabel
           : "";
 
         return { ip, ispLabel: label };
       }
 
       async function tryJson(url, timeoutMs = 4500) {
+        const t0 = performance.now();
         const r = await fetchWithTimeout(url, timeoutMs, { cache: "no-store" });
+        const t1 = performance.now();
         if (!r.ok) throw new Error("HTTP_" + r.status);
         const data = await r.json().catch(() => null);
         if (!data) throw new Error("BAD_JSON");
-        return data;
+        return { data, ms: t1 - t0 };
+      }
+
+      async function tryText(url, timeoutMs = 4500) {
+        const t0 = performance.now();
+        const r = await fetchWithTimeout(url, timeoutMs, { cache: "no-store" });
+        const t1 = performance.now();
+        if (!r.ok) throw new Error("HTTP_" + r.status);
+        const text = await r.text();
+        return { text, ms: t1 - t0 };
       }
 
       function setIPISP(ip, ispText) {
@@ -540,59 +609,208 @@
         setIPISP("در حال شناسایی...", "در حال شناسایی...");
         dbg("IP/ISP: start");
 
-        // 1) Worker first
-        try {
-          const d = await tryJson(WORKER_URL + "/?t=" + Date.now(), 5500);
-          const out = normalizeISPFields(d);
-          if (out.ip) {
-            setIPISP(
-              out.ip,
-              out.ispLabel || (currentLang === "fa" ? "نامشخص" : "Unknown")
-            );
-            dbg(
-              "IP/ISP: worker ok ip=" + out.ip + " isp=" + (out.ispLabel || "")
-            );
-            return;
-          }
-          dbg("IP/ISP: worker json but no ip");
-        } catch (e) {
-          dbg("IP/ISP: worker fail " + (e?.message || e));
-        }
+        // Provider list (بدون API Key) + اولویت اولیه (کمتر = بهتر)
+        const providers = [
+          // Worker (اگر درست تنظیم شده باشه، بهترینه)
+          {
+            id: "worker",
+            name: "Worker",
+            priority: 0,
+            run: async () => {
+              const { data, ms } = await tryJson(
+                WORKER_URL + "/?t=" + Date.now(),
+                5500
+              );
+              const out = normalizeISPFields(data);
+              return { ip: out.ip, isp: out.ispLabel, ms };
+            },
+          },
 
-        // 2) Public fallbacks
-        const candidates = [
-          { name: "ipapi.co", url: "https://ipapi.co/json/" },
-          { name: "ipwho.is", url: "https://ipwho.is/" },
-          { name: "ifconfig.co", url: "https://ifconfig.co/json" },
-          { name: "ipify", url: "https://api.ipify.org?format=json" },
+          // معمولاً برای ایران خوب: ipwho / ipapi / ipinfo / ip-api (بسته به ISP و فیلتر)
+          {
+            id: "ipwho",
+            name: "ipwho.is",
+            priority: 1,
+            run: async () => {
+              const { data, ms } = await tryJson(
+                "https://ipwho.is/?t=" + Date.now(),
+                4500
+              );
+              const out = normalizeISPFields(data);
+              return { ip: out.ip, isp: out.ispLabel, ms };
+            },
+          },
+          {
+            id: "ipapi_co",
+            name: "ipapi.co",
+            priority: 2,
+            run: async () => {
+              const { data, ms } = await tryJson(
+                "https://ipapi.co/json/?t=" + Date.now(),
+                4500
+              );
+              const out = normalizeISPFields(data);
+              // ipapi.co معمولاً org/asn دارد
+              const org = pickFirst(data.org, data.asn, data.network);
+              const out2 = out.ispLabel || (org ? org : "");
+              return { ip: out.ip, isp: out2, ms };
+            },
+          },
+          {
+            id: "ipinfo",
+            name: "ipinfo.io",
+            priority: 3,
+            run: async () => {
+              const { data, ms } = await tryJson(
+                "https://ipinfo.io/json?token=&t=" + Date.now(),
+                4500
+              );
+              // بدون توکن هم معمولاً org را می‌دهد (محدودیت دارد)
+              const ip = pickFirst(data.ip);
+              const org = pickFirst(data.org); // مثل: "ASXXXX Company Name"
+              return { ip, isp: org, ms };
+            },
+          },
+          {
+            id: "ipapi_com",
+            name: "ip-api.com",
+            priority: 4,
+            run: async () => {
+              const { data, ms } = await tryJson(
+                "https://ip-api.com/json/?fields=status,message,query,isp,org,as&lang=en&t=" +
+                  Date.now(),
+                4500
+              );
+              const ip = pickFirst(data.query);
+              const isp = pickFirst(data.isp, data.org, data.as);
+              return { ip, isp, ms };
+            },
+          },
+          {
+            id: "ifconfig",
+            name: "ifconfig.co",
+            priority: 5,
+            run: async () => {
+              const { data, ms } = await tryJson(
+                "https://ifconfig.co/json?t=" + Date.now(),
+                4500
+              );
+              const out = normalizeISPFields(data);
+              // ifconfig.co: sometimes "asn_org" / "org"
+              const org = pickFirst(data.asn_org, data.org);
+              return { ip: out.ip, isp: out.ispLabel || org, ms };
+            },
+          },
+          {
+            id: "ipguide",
+            name: "ip.guide",
+            priority: 6,
+            run: async () => {
+              const { data, ms } = await tryJson(
+                "https://ip.guide/?t=" + Date.now(),
+                4500
+              );
+              // ip.guide format varies; try common fields
+              const out = normalizeISPFields(data);
+              const ip = out.ip || pickFirst(data.ip);
+              const isp =
+                out.ispLabel ||
+                pickFirst(data.isp, data.org, data.asn?.name, data.as?.name);
+              return { ip, isp, ms };
+            },
+          },
+          // این‌ها معمولاً ISP دقیق نمی‌دهند ولی IP را نجات می‌دهند:
+          {
+            id: "myip",
+            name: "api.myip.com",
+            priority: 90,
+            run: async () => {
+              const { data, ms } = await tryJson(
+                "https://api.myip.com/?t=" + Date.now(),
+                4500
+              );
+              const ip = pickFirst(data.ip);
+              return { ip, isp: "", ms };
+            },
+          },
+          {
+            id: "ipify",
+            name: "ipify",
+            priority: 99,
+            run: async () => {
+              const { data, ms } = await tryJson(
+                "https://api.ipify.org?format=json&t=" + Date.now(),
+                4500
+              );
+              const ip = pickFirst(data.ip);
+              return { ip, isp: "", ms };
+            },
+          },
         ];
 
-        for (const c of candidates) {
+        // مرتب‌سازی بر اساس نتایج واقعی کاربران (localStorage)
+        const ordered = [...providers].sort((a, b) => {
+          const sa = providerScore(a.id, a.priority);
+          const sb = providerScore(b.id, b.priority);
+          return sb - sa;
+        });
+
+        dbg("IP/ISP: provider order = " + ordered.map((p) => p.id).join(", "));
+
+        let bestIp = "";
+        let bestIsp = "";
+
+        for (const p of ordered) {
           try {
-            dbg("IP/ISP: try " + c.name);
-            const d = await tryJson(
-              c.url + (c.url.includes("?") ? "&" : "?") + "t=" + Date.now(),
-              4500
-            );
-            const out = normalizeISPFields(d);
-            if (out.ip) {
-              setIPISP(
-                out.ip,
-                out.ispLabel || (currentLang === "fa" ? "نامشخص" : "Unknown")
-              );
+            dbg("IP/ISP: try " + p.name);
+            const r = await p.run();
+
+            const ip = (r.ip || "").trim();
+            const isp = (r.isp || "").trim();
+            const ok = !!ip;
+            const hasIsp = !!isp;
+
+            recordProviderResult(p.id, ok, hasIsp, r.ms);
+
+            // اگر IP گرفتیم، همون لحظه UI رو حداقل با IP پر کن
+            if (ip && !bestIp) bestIp = ip;
+            if (isp && !bestIsp) bestIsp = isp;
+
+            // اگر هم IP هم ISP داریم، بهترین حالت: تمام
+            if (ip && isp) {
+              setIPISP(ip, isp);
               dbg(
-                "IP/ISP: ok " +
-                  c.name +
-                  " ip=" +
-                  out.ip +
-                  " isp=" +
-                  (out.ispLabel || "")
+                `IP/ISP: OK via ${
+                  p.name
+                } | ip=${ip} | isp=${isp} | ${Math.round(r.ms)}ms`
               );
               return;
             }
+
+            // اگر فقط IP داریم، ادامه بده برای ISP بهتر، ولی UI رو IP بده
+            if (ip && !isp) {
+              setIPISP(
+                ip,
+                currentLang === "fa" ? "در حال یافتن ISP..." : "Finding ISP..."
+              );
+              dbg(
+                `IP/ISP: got IP only via ${p.name} | ip=${ip} | ${Math.round(
+                  r.ms
+                )}ms`
+              );
+              // ادامه می‌دهیم
+            }
           } catch (e) {
-            dbg("IP/ISP: fail " + c.name + " " + (e?.message || e));
+            recordProviderResult(p.id, false, false, null);
+            dbg("IP/ISP: fail " + p.name + " (" + (e?.message || e) + ")");
           }
+        }
+
+        // اگر به ISP نرسیدیم ولی IP داریم:
+        if (bestIp) {
+          setIPISP(bestIp, currentLang === "fa" ? "نامشخص" : "Unknown");
+          dbg("IP/ISP: final (ip only) ip=" + bestIp);
+          return;
         }
 
         setIPISP("Unknown", currentLang === "fa" ? "نامشخص" : "Unknown");
