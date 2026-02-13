@@ -1,746 +1,1071 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>Mirza Ping - تست سرعت اینترنت</title>
+    <meta name="theme-color" content="#1a0b2e" />
+    <meta
+      name="description"
+      content="تست سرعت اینترنت با سرورهای جهانی Vultr - Mirza Ping"
+    />
+    <title>Mirza Ping - Internet Speed Test</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap");
+
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
       }
+
+      :root {
+        --primary: #8b5cf6;
+        --secondary: #6366f1;
+        --accent: #a855f7;
+        --bg-dark: #1a0b2e;
+        --bg-mid: #2d1b4e;
+        --bg-light: #1e0936;
+      }
+
       body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-family:
+          "Vazirmatn",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
         background: linear-gradient(
           135deg,
-          #1a1a2e 0%,
-          #16213e 50%,
-          #0f3460 100%
+          var(--bg-dark) 0%,
+          var(--bg-mid) 50%,
+          var(--bg-light) 100%
         );
         min-height: 100vh;
-        color: #fff;
-        overflow-x: hidden;
-        -webkit-font-smoothing: antialiased;
-        text-rendering: optimizeLegibility;
-      }
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-      }
-      header {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 0;
-        margin-bottom: 26px;
-        gap: 12px;
-      }
-      .logo-section {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        min-width: 0;
-      }
-      .logo {
-        width: 58px;
-        height: 58px;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 14px;
-        border: 2px solid rgba(138, 43, 226, 0.3);
-        display: flex;
-        align-items: center;
         justify-content: center;
-        font-size: 18px;
-        font-weight: 800;
-        box-shadow: 0 8px 32px rgba(138, 43, 226, 0.2);
-        flex: 0 0 auto;
+        align-items: center;
+        overflow-x: hidden;
+        padding: 10px;
       }
-      .site-title {
-        font-size: 32px;
-        font-weight: 800;
-        background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .lang-switch {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border: 2px solid rgba(138, 43, 226, 0.3);
-        padding: 10px 16px;
-        border-radius: 999px;
-        cursor: pointer;
-        transition: all 0.2s;
-        color: #fff;
-        font-size: 13px;
-        flex: 0 0 auto;
-      }
-      .lang-switch:hover {
-        background: rgba(138, 43, 226, 0.28);
-        transform: translateY(-1px);
+
+      .container {
+        width: 100%;
+        max-width: 1000px;
+        padding: 20px;
       }
 
       .glass-card {
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(20px);
-        border-radius: 26px;
-        padding: 34px;
-        border: 2px solid rgba(138, 43, 226, 0.2);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        margin-bottom: 26px;
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: clamp(20px, 5vw, 50px);
+        box-shadow: 0 8px 32px 0 rgba(138, 43, 226, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
 
-      .info-cards {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 14px;
-        margin-bottom: 10px;
-      }
-      .info-card {
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(15px);
-        border-radius: 18px;
-        padding: 16px;
-        border: 1px solid rgba(138, 43, 226, 0.3);
+      .header {
         text-align: center;
-        transition: all 0.2s;
-      }
-      .info-label {
-        font-size: 13px;
-        color: #a8a8a8;
-        margin-bottom: 8px;
-      }
-      .info-value {
-        font-size: 16px;
-        font-weight: 800;
-        color: #8fb3ff;
-        word-break: break-word;
+        margin-bottom: clamp(20px, 5vw, 40px);
       }
 
-      .speed-display {
-        text-align: center;
-        margin: 26px 0 18px;
-      }
-      .main-speed {
-        font-size: 64px;
-        font-weight: 900;
-        background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+      .logo {
+        font-size: clamp(1.8em, 6vw, 3em);
+        font-weight: 700;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--secondary) 50%,
+          var(--accent) 100%
+        );
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        line-height: 1;
-        letter-spacing: -1px;
         margin-bottom: 8px;
       }
-      .speed-label {
-        font-size: 18px;
-        color: #a8a8a8;
+
+      .subtitle {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: clamp(0.9em, 3vw, 1.1em);
+        font-weight: 300;
+        line-height: 1.5;
       }
 
-      .metrics-grid {
+      .lang-switch {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        display: flex;
+        gap: 8px;
+        z-index: 10;
+      }
+
+      .lang-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: rgba(255, 255, 255, 0.7);
+        padding: 6px 14px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-family: "Vazirmatn", sans-serif;
+        font-size: 0.85em;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        touch-action: manipulation;
+      }
+
+      .lang-btn:hover,
+      .lang-btn.active {
+        background: rgba(139, 92, 246, 0.3);
+        border-color: rgba(139, 92, 246, 0.5);
+        color: white;
+      }
+
+      .server-selector {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: clamp(15px, 4vw, 25px);
+        margin-bottom: clamp(20px, 5vw, 30px);
+      }
+
+      .selector-title {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: clamp(0.9em, 3vw, 1.1em);
+        margin-bottom: 15px;
+        font-weight: 500;
+      }
+
+      .continent-group {
+        margin-bottom: 15px;
+      }
+
+      .continent-title {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: clamp(0.85em, 2.5vw, 0.95em);
+        margin-bottom: 10px;
+        font-weight: 500;
+        padding-bottom: 5px;
+        border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+      }
+
+      .server-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .server-btn {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: rgba(255, 255, 255, 0.7);
+        padding: 8px 16px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-family: "Vazirmatn", sans-serif;
+        font-size: clamp(0.8em, 2.5vw, 0.9em);
+        transition: all 0.3s ease;
+        touch-action: manipulation;
+      }
+
+      .server-btn:hover,
+      .server-btn.selected {
+        background: rgba(139, 92, 246, 0.25);
+        border-color: rgba(139, 92, 246, 0.5);
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .server-btn.selected {
+        background: rgba(139, 92, 246, 0.4);
+      }
+
+      .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 14px;
-        margin-bottom: 18px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: clamp(12px, 3vw, 20px);
+        margin-bottom: clamp(20px, 5vw, 40px);
       }
-      .metric-box {
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(15px);
-        border-radius: 18px;
-        padding: 18px;
-        border: 1px solid rgba(138, 43, 226, 0.3);
+
+      .stat-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: clamp(15px, 4vw, 25px);
         text-align: center;
+        transition: transform 0.2s ease;
       }
-      .metric-value {
-        font-size: 30px;
-        font-weight: 900;
-        color: #8fb3ff;
-        margin-bottom: 4px;
+
+      .stat-card:active {
+        transform: scale(0.98);
       }
-      .metric-label {
-        font-size: 13px;
-        color: #a8a8a8;
+
+      .stat-label {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: clamp(0.8em, 2.5vw, 0.9em);
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+
+      .stat-value {
+        color: #fff;
+        font-size: clamp(1.8em, 6vw, 2.5em);
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1.2;
+      }
+
+      .stat-unit {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.5em;
+        font-weight: 400;
+        display: inline-block;
+        margin-left: 2px;
       }
 
       .chart-container {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(15px);
-        border-radius: 18px;
-        padding: 18px;
-        border: 1px solid rgba(138, 43, 226, 0.3);
-        margin-bottom: 16px;
-        height: 260px;
-        position: relative;
-      }
-      canvas {
-        width: 100% !important;
-        height: 100% !important;
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: clamp(15px, 4vw, 30px);
+        margin-bottom: clamp(15px, 4vw, 30px);
+        height: clamp(200px, 40vw, 300px);
       }
 
-      .progress-bar {
-        width: 100%;
-        height: 8px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 999px;
-        overflow: hidden;
-        margin: 18px 0 14px;
-      }
-      .progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        width: 0%;
-        transition: width 0.25s;
-      }
-
-      .status-text {
+      .chart-title {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: clamp(0.9em, 3vw, 1.1em);
+        margin-bottom: 15px;
         text-align: center;
-        color: #a8a8a8;
-        font-size: 14px;
-        margin-top: 10px;
+        font-weight: 500;
+      }
+
+      #speedChart {
+        width: 100%;
+        height: calc(100% - 35px);
       }
 
       .start-btn {
-        background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+        width: 100%;
+        padding: clamp(15px, 4vw, 20px);
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--secondary) 50%,
+          var(--accent) 100%
+        );
         border: none;
-        padding: 16px 44px;
-        border-radius: 999px;
-        font-size: 18px;
-        font-weight: 900;
-        color: #fff;
+        border-radius: 15px;
+        color: white;
+        font-size: clamp(1em, 4vw, 1.3em);
+        font-weight: 600;
         cursor: pointer;
-        transition: transform 0.15s;
-        box-shadow: 0 8px 26px rgba(102, 126, 234, 0.38);
-        display: block;
-        margin: 12px auto 0;
-        width: min(420px, 100%);
+        transition: all 0.2s ease;
+        font-family: "Vazirmatn", sans-serif;
+        box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+        touch-action: manipulation;
       }
+
       .start-btn:active {
-        transform: translateY(1px);
+        transform: scale(0.98);
       }
+
       .start-btn:disabled {
-        opacity: 0.55;
+        opacity: 0.5;
         cursor: not-allowed;
+        transform: none;
       }
 
-      .debug {
-        margin-top: 14px;
-        padding: 12px 14px;
-        border-radius: 14px;
-        border: 1px solid rgba(138, 43, 226, 0.25);
-        background: rgba(255, 255, 255, 0.06);
-        font-size: 12px;
-        color: rgba(234, 240, 255, 0.85);
-        line-height: 1.6;
-        white-space: pre-wrap;
-        user-select: text;
-        max-height: 220px;
-        overflow: auto;
+      .status {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.7);
+        margin-top: 15px;
+        font-size: clamp(0.9em, 3vw, 1.1em);
+        min-height: 30px;
       }
 
-      @media (max-width: 520px) {
+      .loading {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 3px solid rgba(139, 92, 246, 0.3);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-left: 8px;
+        vertical-align: middle;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .server-info {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: clamp(0.8em, 2.5vw, 0.9em);
+        margin-top: 15px;
+      }
+
+      @media (max-width: 640px) {
+        body {
+          padding: 5px;
+        }
+
         .container {
-          padding: 14px;
+          padding: 10px;
         }
-        header {
-          padding: 10px 0;
-          margin-bottom: 18px;
-        }
-        .logo {
-          width: 48px;
-          height: 48px;
-          border-radius: 12px;
-          font-size: 16px;
-        }
-        .site-title {
-          font-size: 22px;
-        }
+
         .glass-card {
-          padding: 18px;
           border-radius: 20px;
         }
-        .main-speed {
-          font-size: 54px;
+
+        .stats-grid {
+          grid-template-columns: repeat(3, 1fr);
         }
-        .speed-label {
-          font-size: 16px;
+
+        .lang-switch {
+          top: 10px;
+          left: 10px;
+          gap: 6px;
         }
-        .chart-container {
-          height: 220px;
-          padding: 14px;
+
+        .lang-btn {
+          padding: 5px 12px;
+          font-size: 0.8em;
         }
-        .metric-value {
-          font-size: 28px;
-        }
-        .start-btn {
-          font-size: 17px;
-          padding: 15px 20px;
+
+        .server-btn {
+          padding: 6px 12px;
+          font-size: 0.75em;
         }
       }
 
-      [dir="ltr"] {
-        text-align: left;
+      @media (min-width: 641px) and (max-width: 1024px) {
+        .stats-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
       }
-      [dir="ltr"] .info-card,
-      [dir="ltr"] .metric-box,
-      [dir="ltr"] .speed-display,
-      [dir="ltr"] .status-text {
-        text-align: center;
+
+      [dir="ltr"] .lang-switch {
+        left: auto;
+        right: 15px;
+      }
+
+      [dir="ltr"] .stat-unit {
+        margin-left: 0;
+        margin-right: 2px;
+      }
+
+      [dir="ltr"] .loading {
+        margin-left: 0;
+        margin-right: 8px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
       }
     </style>
   </head>
-
   <body>
     <div class="container">
-      <header>
-        <div class="logo-section">
-          <div class="logo">MP</div>
-          <div class="site-title" data-fa="میرزا پینگ" data-en="Mirza Ping">
-            میرزا پینگ
-          </div>
-        </div>
-        <button class="lang-switch" onclick="toggleLang()">
-          <span data-fa="English" data-en="فارسی">English</span>
+      <div class="lang-switch">
+        <button
+          class="lang-btn active"
+          onclick="changeLang('fa')"
+          data-lang="fa"
+          aria-label="فارسی"
+        >
+          فارسی
         </button>
-      </header>
+        <button
+          class="lang-btn"
+          onclick="changeLang('en')"
+          data-lang="en"
+          aria-label="English"
+        >
+          English
+        </button>
+      </div>
 
       <div class="glass-card">
-        <div class="info-cards">
-          <div class="info-card">
-            <div class="info-label" data-fa="آدرس IP" data-en="IP Address">
-              آدرس IP
-            </div>
-            <div class="info-value" id="ip">در حال بارگذاری...</div>
+        <div class="header">
+          <div class="logo" data-text="logo">Mirza Ping</div>
+          <div class="subtitle" data-text="subtitle">
+            تست سرعت اینترنت با سرورهای جهانی Vultr
           </div>
         </div>
 
-        <div class="speed-display">
-          <div class="main-speed" id="mainSpeed">0</div>
-          <div class="speed-label" data-fa="مگابیت بر ثانیه" data-en="Mbps">
-            مگابیت بر ثانیه
+        <div class="server-selector">
+          <div class="selector-title" data-text="selectServer">
+            انتخاب سرور تست
+          </div>
+
+          <div class="continent-group">
+            <div class="continent-title" data-text="europe">🌍 اروپا</div>
+            <div class="server-buttons">
+              <button
+                class="server-btn"
+                onclick="selectServer('germany')"
+                data-server="germany"
+                data-text-btn="germany"
+              >
+                آلمان
+              </button>
+              <button
+                class="server-btn"
+                onclick="selectServer('netherlands')"
+                data-server="netherlands"
+                data-text-btn="netherlands"
+              >
+                هلند
+              </button>
+              <button
+                class="server-btn"
+                onclick="selectServer('uk')"
+                data-server="uk"
+                data-text-btn="uk"
+              >
+                انگلستان
+              </button>
+              <button
+                class="server-btn"
+                onclick="selectServer('sweden')"
+                data-server="sweden"
+                data-text-btn="sweden"
+              >
+                سوئد
+              </button>
+              <button
+                class="server-btn"
+                onclick="selectServer('poland')"
+                data-server="poland"
+                data-text-btn="poland"
+              >
+                لهستان
+              </button>
+            </div>
+          </div>
+
+          <div class="continent-group">
+            <div class="continent-title" data-text="asia">🌏 آسیا</div>
+            <div class="server-buttons">
+              <button
+                class="server-btn"
+                onclick="selectServer('india')"
+                data-server="india"
+                data-text-btn="india"
+              >
+                هند
+              </button>
+              <button
+                class="server-btn"
+                onclick="selectServer('japan')"
+                data-server="japan"
+                data-text-btn="japan"
+              >
+                ژاپن
+              </button>
+              <button
+                class="server-btn"
+                onclick="selectServer('korea')"
+                data-server="korea"
+                data-text-btn="korea"
+              >
+                کره جنوبی
+              </button>
+              <button
+                class="server-btn"
+                onclick="selectServer('singapore')"
+                data-server="singapore"
+                data-text-btn="singapore"
+              >
+                سنگاپور
+              </button>
+            </div>
+          </div>
+
+          <div class="continent-group">
+            <div class="continent-title" data-text="middleEast">
+              🏜️ خاورمیانه
+            </div>
+            <div class="server-buttons">
+              <button
+                class="server-btn selected"
+                onclick="selectServer('israel')"
+                data-server="israel"
+                data-text-btn="israel"
+              >
+                اسرائیل
+              </button>
+            </div>
+          </div>
+
+          <div class="continent-group">
+            <div class="continent-title" data-text="americas">
+              🌎 قاره آمریکا
+            </div>
+            <div class="server-buttons">
+              <button
+                class="server-btn"
+                onclick="selectServer('usa')"
+                data-server="usa"
+                data-text-btn="usa"
+              >
+                ایالات متحده
+              </button>
+              <button
+                class="server-btn"
+                onclick="selectServer('canada')"
+                data-server="canada"
+                data-text-btn="canada"
+              >
+                کانادا
+              </button>
+              <button
+                class="server-btn"
+                onclick="selectServer('brazil')"
+                data-server="brazil"
+                data-text-btn="brazil"
+              >
+                برزیل
+              </button>
+            </div>
+          </div>
+
+          <div class="continent-group">
+            <div class="continent-title" data-text="africa">🌍 آفریقا</div>
+            <div class="server-buttons">
+              <button
+                class="server-btn"
+                onclick="selectServer('southafrica')"
+                data-server="southafrica"
+                data-text-btn="southafrica"
+              >
+                آفریقای جنوبی
+              </button>
+            </div>
           </div>
         </div>
 
-        <div class="metrics-grid">
-          <div class="metric-box">
-            <div class="metric-value" id="ping">0</div>
-            <div class="metric-label" data-fa="پینگ (ms)" data-en="Ping (ms)">
-              پینگ (ms)
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label" data-text="ping">پینگ</div>
+            <div class="stat-value">
+              <span id="pingValue">-</span>
+              <span class="stat-unit">ms</span>
             </div>
           </div>
-          <div class="metric-box">
-            <div class="metric-value" id="download">0</div>
-            <div
-              class="metric-label"
-              data-fa="دانلود (Mbps)"
-              data-en="Download (Mbps)"
-            >
-              دانلود (Mbps)
+          <div class="stat-card">
+            <div class="stat-label" data-text="jitter">جیتر</div>
+            <div class="stat-value">
+              <span id="jitterValue">-</span>
+              <span class="stat-unit">ms</span>
             </div>
           </div>
-          <div class="metric-box">
-            <div class="metric-value" id="jitter">0</div>
-            <div class="metric-label" data-fa="جیتر (ms)" data-en="Jitter (ms)">
-              جیتر (ms)
+          <div class="stat-card">
+            <div class="stat-label" data-text="download">دانلود</div>
+            <div class="stat-value">
+              <span id="downloadValue">-</span>
+              <span class="stat-unit">Mbps</span>
             </div>
           </div>
         </div>
 
-        <div class="chart-container"><canvas id="speedChart"></canvas></div>
-
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress"></div>
+        <div class="chart-container">
+          <div class="chart-title" data-text="chartTitle">
+            نمودار تغییرات سرعت دانلود
+          </div>
+          <canvas id="speedChart"></canvas>
         </div>
 
-        <div
-          class="status-text"
-          id="status"
-          data-fa="آماده برای شروع تست"
-          data-en="Ready to start test"
+        <button
+          class="start-btn"
+          id="startBtn"
+          onclick="startTest()"
+          data-text="startBtn"
+          aria-label="شروع تست"
         >
-          آماده برای شروع تست
-        </div>
-
-        <button class="start-btn" id="startBtn" onclick="startTest()">
-          <span data-fa="شروع تست" data-en="Start Test">شروع تست</span>
+          شروع تست
         </button>
 
-        <div class="debug" id="debug">Debug: ready.</div>
+        <div class="status" id="status" role="status" aria-live="polite"></div>
+        <div class="server-info" id="serverInfo" data-text="serverInfo">
+          آماده برای تست با سرور اسرائیل
+        </div>
       </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script>
-      let currentLang = "fa";
-      let isTestRunning = false;
-
-      // === بدون Workers: تست از فایل‌های GitHub Pages ===
-      // /assets/ping.bin (کوچک)
-      // /assets/download.bin (بزرگ)
-      const PING_URL = "./assets/ping.bin";
-      const DOWNLOAD_URL = "./assets/download.bin";
-
-      const dbgEl = document.getElementById("debug");
-      function dbg(msg) {
-        const t = new Date().toLocaleTimeString();
-        dbgEl.textContent = (`[${t}] ${msg}\n` + dbgEl.textContent).slice(
-          0,
-          2600
-        );
-        console.log("[DBG]", msg);
-      }
-
-      // Chart
-      let chartData = {
-        labels: [],
-        datasets: [
-          {
-            label: "Speed (Mbps)",
-            data: [],
-            borderColor: "#667eea",
-            backgroundColor: "rgba(102, 126, 234, 0.1)",
-            tension: 0.4,
-            fill: true,
-            pointRadius: 2.5,
-          },
-        ],
+      const translations = {
+        fa: {
+          logo: "Mirza Ping",
+          subtitle: "تست سرعت اینترنت با سرورهای جهانی Vultr",
+          selectServer: "انتخاب سرور تست",
+          europe: "🌍 اروپا",
+          asia: "🌏 آسیا",
+          middleEast: "🏜️ خاورمیانه",
+          americas: "🌎 قاره آمریکا",
+          africa: "🌍 آفریقا",
+          germany: "آلمان",
+          netherlands: "هلند",
+          uk: "انگلستان",
+          sweden: "سوئد",
+          poland: "لهستان",
+          india: "هند",
+          japan: "ژاپن",
+          korea: "کره جنوبی",
+          singapore: "سنگاپور",
+          israel: "اسرائیل",
+          usa: "ایالات متحده",
+          canada: "کانادا",
+          brazil: "برزیل",
+          southafrica: "آفریقای جنوبی",
+          ping: "پینگ",
+          jitter: "جیتر",
+          download: "دانلود",
+          chartTitle: "نمودار تغییرات سرعت دانلود",
+          startBtn: "شروع تست",
+          serverInfo: "آماده برای تست با سرور ",
+          testing: "در حال تست...",
+          testingPing: "در حال تست پینگ...",
+          testingDownload: "در حال تست دانلود (چند نخی)...",
+          completed: "تست با موفقیت انجام شد!",
+          error: "خطا در انجام تست",
+        },
+        en: {
+          logo: "Mirza Ping",
+          subtitle: "Internet Speed Test with Vultr Global Servers",
+          selectServer: "Select Test Server",
+          europe: "🌍 Europe",
+          asia: "🌏 Asia",
+          middleEast: "🏜️ Middle East",
+          americas: "🌎 Americas",
+          africa: "🌍 Africa",
+          germany: "Germany",
+          netherlands: "Netherlands",
+          uk: "United Kingdom",
+          sweden: "Sweden",
+          poland: "Poland",
+          india: "India",
+          japan: "Japan",
+          korea: "South Korea",
+          singapore: "Singapore",
+          israel: "Israel",
+          usa: "United States",
+          canada: "Canada",
+          brazil: "Brazil",
+          southafrica: "South Africa",
+          ping: "Ping",
+          jitter: "Jitter",
+          download: "Download",
+          chartTitle: "Download Speed Variation Chart",
+          startBtn: "Start Test",
+          serverInfo: "Ready to test with ",
+          testing: "Testing...",
+          testingPing: "Testing ping...",
+          testingDownload: "Testing download (multi-threaded)...",
+          completed: "Test completed successfully!",
+          error: "Error during test",
+        },
       };
 
-      const ctx = document.getElementById("speedChart").getContext("2d");
-      const chart = new Chart(ctx, {
-        type: "line",
-        data: chartData,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: { color: "rgba(255, 255, 255, 0.1)" },
-              ticks: { color: "#a8a8a8", callback: (v) => v + " Mbps" },
+      const servers = {
+        germany: {
+          url: "https://fra-de-ping.vultr.com/vultr.com.100MB.bin",
+          ping: "https://fra-de-ping.vultr.com/",
+        },
+        india: {
+          url: "https://del-in-ping.vultr.com/vultr.com.100MB.bin",
+          ping: "https://del-in-ping.vultr.com/",
+        },
+        japan: {
+          url: "https://hnd-jp-ping.vultr.com/vultr.com.100MB.bin",
+          ping: "https://hnd-jp-ping.vultr.com/",
+        },
+        korea: {
+          url: "https://sel-kor-ping.vultr.com/vultr.com.100MB.bin",
+          ping: "https://sel-kor-ping.vultr.com/",
+        },
+        singapore: {
+          url: "https://sgp-ping.vultr.com/vultr.com.100MB.bin",
+          ping: "https://sgp-ping.vultr.com/",
+        },
+        israel: {
+          url: "https://tlv-il-ping.vultr.com/vultr.com.100MB.bin",
+          ping: "https://tlv-il-ping.vultr.com/",
+        },
+        netherlands: {
+          url: "https://ams-nl-ping.vultr.com/vultr.com.100MB.bin",
+          ping: "https://ams-nl-ping.vultr.com/",
+        },
+        uk: {
+          url: "https://lon-gb-ping.vultr.com/vultr.com.100MB.bin",
+          ping: "https://lon-gb-ping.vultr.com/",
+        },
+        sweden: {
+          url: "https://sto-se-ping.vultr.com/vultr.com.100MB.bin",
+          ping: "https://sto-se-ping.vultr.com/",
+        },
+        poland: {
+          url: "https://waw-pl-ping.vultr.com/vultr.com.100MB.bin",
+          ping: "https://waw-pl-ping.vultr.com/",
+        },
+        usa: {
+          url: "https://lax-ca-us-ping.vultr.com/vultr.com.100MB.bin",
+          ping: "https://lax-ca-us-ping.vultr.com/",
+        },
+        canada: {
+          url: "https://tor-ca-ping.vultr.com/vultr.com.100MB.bin",
+          ping: "https://tor-ca-ping.vultr.com/",
+        },
+        brazil: {
+          url: "https://sao-br-ping.vultr.com/vultr.com.100MB.bin",
+          ping: "https://sao-br-ping.vultr.com/",
+        },
+        southafrica: {
+          url: "https://jnb-za-ping.vultr.com/vultr.com.100MB.bin",
+          ping: "https://jnb-za-ping.vultr.com/",
+        },
+      };
+
+      let currentLang = "fa";
+      let chart = null;
+      let isTestRunning = false;
+      let selectedServer = "israel";
+
+      function changeLang(lang) {
+        currentLang = lang;
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === "fa" ? "rtl" : "ltr";
+
+        document.querySelectorAll(".lang-btn").forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.lang === lang);
+        });
+
+        document.querySelectorAll("[data-text]").forEach((el) => {
+          const key = el.dataset.text;
+          if (translations[lang][key]) {
+            el.textContent = translations[lang][key];
+          }
+        });
+
+        document.querySelectorAll("[data-text-btn]").forEach((btn) => {
+          const key = btn.dataset.textBtn;
+          if (translations[lang][key]) {
+            btn.textContent = translations[lang][key];
+          }
+        });
+
+        updateServerInfo();
+
+        if (chart) {
+          chart.data.datasets[0].label = translations[lang].download;
+          chart.update("none");
+        }
+      }
+
+      function selectServer(server) {
+        selectedServer = server;
+        document.querySelectorAll(".server-btn").forEach((btn) => {
+          btn.classList.remove("selected");
+        });
+        document
+          .querySelector(`[data-server="${server}"]`)
+          .classList.add("selected");
+        updateServerInfo();
+      }
+
+      function updateServerInfo() {
+        const serverInfo = document.getElementById("serverInfo");
+        serverInfo.textContent =
+          translations[currentLang].serverInfo +
+          translations[currentLang][selectedServer];
+      }
+
+      function initChart() {
+        const ctx = document.getElementById("speedChart").getContext("2d", {
+          willReadFrequently: false,
+        });
+
+        chart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: translations[currentLang].download,
+                data: [],
+                borderColor: "#8b5cf6",
+                backgroundColor: "rgba(139, 92, 246, 0.1)",
+                tension: 0.4,
+                fill: true,
+                pointRadius: 0,
+                borderWidth: 2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+              duration: 0,
             },
-            x: {
-              grid: { color: "rgba(255, 255, 255, 0.1)" },
-              ticks: { color: "#a8a8a8" },
+            plugins: {
+              legend: {
+                display: true,
+                labels: {
+                  color: "rgba(255, 255, 255, 0.7)",
+                  font: {
+                    family: "Vazirmatn",
+                    size: window.innerWidth < 640 ? 10 : 12,
+                  },
+                  boxWidth: window.innerWidth < 640 ? 30 : 40,
+                },
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: {
+                  color: "rgba(255, 255, 255, 0.1)",
+                  drawBorder: false,
+                },
+                ticks: {
+                  color: "rgba(255, 255, 255, 0.6)",
+                  font: {
+                    family: "Vazirmatn",
+                    size: window.innerWidth < 640 ? 9 : 11,
+                  },
+                },
+              },
+              x: {
+                grid: {
+                  color: "rgba(255, 255, 255, 0.1)",
+                  drawBorder: false,
+                },
+                ticks: {
+                  color: "rgba(255, 255, 255, 0.6)",
+                  font: {
+                    family: "Vazirmatn",
+                    size: window.innerWidth < 640 ? 9 : 11,
+                  },
+                  maxRotation: 0,
+                },
+              },
+            },
+            interaction: {
+              intersect: false,
+              mode: "index",
             },
           },
-          animation: { duration: 0 },
-        },
-      });
-
-      function toggleLang() {
-        currentLang = currentLang === "fa" ? "en" : "fa";
-        document.documentElement.setAttribute("lang", currentLang);
-        document.documentElement.setAttribute(
-          "dir",
-          currentLang === "fa" ? "rtl" : "ltr"
-        );
-        document.querySelectorAll("[data-fa]").forEach((el) => {
-          const text = el.getAttribute("data-" + currentLang);
-          if (text) el.textContent = text;
         });
       }
 
-      function sleep(ms) {
-        return new Promise((r) => setTimeout(r, ms));
-      }
-
-      function fetchWithTimeout(url, timeoutMs = 8000, fetchOptions = {}) {
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), timeoutMs);
-        return fetch(url, {
-          ...fetchOptions,
-          signal: controller.signal,
-        }).finally(() => clearTimeout(timer));
-      }
-
-      function updateStatus(faText, enText) {
-        const statusEl = document.getElementById("status");
-        statusEl.setAttribute("data-fa", faText);
-        statusEl.setAttribute("data-en", enText);
-        statusEl.textContent = currentLang === "fa" ? faText : enText;
-      }
-
-      function pushChartPoint(speedMbps, startMs) {
-        const elapsed = ((performance.now() - startMs) / 1000).toFixed(1);
-        chartData.labels.push(elapsed + "s");
-        chartData.datasets[0].data.push(Number(speedMbps.toFixed(2)));
-        if (chartData.labels.length > 70) {
-          chartData.labels.shift();
-          chartData.datasets[0].data.shift();
-        }
-        chart.update();
-      }
-
-      // فقط IP از ipify
-      async function getIP() {
-        const ipEl = document.getElementById("ip");
-        ipEl.textContent = "در حال شناسایی...";
-        dbg("IP: fetching from ipify...");
-
-        try {
-          const r = await fetchWithTimeout(
-            "https://api.ipify.org?format=json&t=" + Date.now(),
-            6000,
-            {
-              cache: "no-store",
-            }
-          );
-          if (!r.ok) throw new Error("HTTP_" + r.status);
-          const d = await r.json();
-          ipEl.textContent = d && d.ip ? d.ip : "Unknown";
-          dbg("IP: ok " + (d.ip || "Unknown"));
-        } catch (e) {
-          ipEl.textContent = "Unknown";
-          dbg("IP: fail " + (e?.message || e));
-        }
-      }
-
       async function measurePing() {
-        updateStatus("در حال تست پینگ...", "Testing ping...");
-        dbg("Ping: start");
-
         const pingResults = [];
-        const iterations = 5;
+        const iterations = 6;
+        const pingUrl = servers[selectedServer].ping;
 
         for (let i = 0; i < iterations; i++) {
           const start = performance.now();
+
           try {
-            await fetchWithTimeout(PING_URL + "?t=" + Date.now(), 3800, {
-              cache: "no-store",
+            await fetch(pingUrl, {
+              method: "HEAD",
+              cache: "no-cache",
+              mode: "no-cors",
             });
             const end = performance.now();
-            const ping = end - start;
-            pingResults.push(ping);
-            document.getElementById("ping").textContent = ping.toFixed(0);
-            dbg(`Ping sample ${i + 1}/${iterations}: ${ping.toFixed(0)}ms`);
+            pingResults.push(end - start);
           } catch (e) {
-            dbg(
-              `Ping sample ${i + 1}/${iterations}: FAIL (${e?.message || e})`
-            );
+            console.error("Ping error:", e);
           }
-          if (i < iterations - 1) await sleep(450);
+
+          await new Promise((resolve) => setTimeout(resolve, 500));
         }
 
-        if (!pingResults.length) {
-          document.getElementById("ping").textContent = "0";
-          document.getElementById("jitter").textContent = "0";
-          dbg("Ping: all failed");
-          return;
-        }
+        if (pingResults.length === 0) return { ping: 0, jitter: 0 };
 
         const avgPing =
           pingResults.reduce((a, b) => a + b, 0) / pingResults.length;
-        const jitter = Math.sqrt(
-          pingResults
-            .map((p) => (p - avgPing) * (p - avgPing))
-            .reduce((a, b) => a + b, 0) / pingResults.length
-        );
+        const jitter = Math.max(...pingResults) - Math.min(...pingResults);
 
-        document.getElementById("ping").textContent = avgPing.toFixed(0);
-        document.getElementById("jitter").textContent = jitter.toFixed(1);
-        dbg(
-          `Ping: done avg=${avgPing.toFixed(0)}ms jitter=${jitter.toFixed(1)}ms`
-        );
+        return {
+          ping: Math.round(avgPing),
+          jitter: Math.round(jitter),
+        };
       }
 
-      // ====== Download (FIXED): چند اتصال موازی + محاسبه پایدار ======
-      function makeNoCacheUrl(base, extra) {
-        const sep = base.includes("?") ? "&" : "?";
-        return (
-          base +
-          sep +
-          "t=" +
-          Date.now() +
-          "&r=" +
-          Math.random() +
-          (extra ? "&" + extra : "")
-        );
+      async function downloadThread(
+        threadId,
+        startTime,
+        testDuration,
+        sharedData,
+      ) {
+        const downloadUrl = servers[selectedServer].url;
+
+        while (Date.now() - startTime < testDuration) {
+          try {
+            const chunkStart = performance.now();
+            const response = await fetch(
+              downloadUrl + "?t=" + Date.now() + "&thread=" + threadId,
+              {
+                cache: "no-cache",
+              },
+            );
+
+            const reader = response.body.getReader();
+            let receivedLength = 0;
+
+            while (true) {
+              const { done, value } = await reader.read();
+
+              if (done) break;
+
+              receivedLength += value.length;
+              sharedData.totalBytes += value.length;
+
+              const elapsed = Date.now() - startTime;
+              if (elapsed >= testDuration) {
+                reader.cancel();
+                break;
+              }
+            }
+          } catch (e) {
+            console.error(`Thread ${threadId} error:`, e);
+            break;
+          }
+        }
       }
 
       async function measureDownload() {
-        updateStatus("در حال تست سرعت دانلود...", "Testing download speed...");
-        dbg("Download: start");
+        const testDuration = 15000;
+        const startTime = Date.now();
+        const numThreads = 4;
 
-        const durationMs = 10000;
-        const startMs = performance.now();
+        chart.data.labels = [];
+        chart.data.datasets[0].data = [];
 
-        // تعداد اتصال موازی (مثل speedtest). 4 معمولاً خوبه.
-        const PARALLEL = 4;
+        const sharedData = { totalBytes: 0 };
+        let lastBytes = 0;
+        let lastTime = startTime;
 
-        // شمارنده بایت برای هر تیک
-        let bytesSinceTick = 0;
-        const speeds = [];
+        const threads = [];
+        for (let i = 0; i < numThreads; i++) {
+          threads.push(downloadThread(i, startTime, testDuration, sharedData));
+        }
 
-        // ریست چارت
-        chartData.labels = [];
-        chartData.datasets[0].data = [];
-        chart.update();
+        const monitorInterval = setInterval(() => {
+          const now = Date.now();
+          const timeDiff = (now - lastTime) / 1000;
+          const bytesDiff = sharedData.totalBytes - lastBytes;
 
-        // کنترل قطع دانلودها
-        const controllers = Array.from(
-          { length: PARALLEL },
-          () => new AbortController()
-        );
+          if (timeDiff > 0) {
+            const speed = (bytesDiff * 8) / timeDiff / 1000000;
 
-        // هر worker تا پایان زمان تست، پشت‌سرهم دانلود می‌کشد (اگر فایل تمام شد، دوباره fetch می‌کند)
-        async function downloadWorker(i) {
-          let round = 0;
-          while (isTestRunning && performance.now() - startMs < durationMs) {
-            const url = makeNoCacheUrl(
-              DOWNLOAD_URL,
-              "w=" + i + "&round=" + round++
-            );
-            try {
-              const res = await fetch(url, {
-                cache: "no-store",
-                signal: controllers[i].signal,
-              });
-              if (!res.ok) throw new Error("HTTP_" + res.status);
-              if (!res.body) throw new Error("STREAM_UNSUPPORTED");
-
-              const reader = res.body.getReader();
-              while (
-                isTestRunning &&
-                performance.now() - startMs < durationMs
-              ) {
-                const { value, done } = await reader.read();
-                if (done) break;
-                bytesSinceTick += value.byteLength;
-              }
-              try {
-                reader.cancel();
-              } catch {}
-            } catch (e) {
-              // اگر Abort شد، طبیعی است
-              if (controllers[i].signal.aborted) break;
-              dbg(`Download worker ${i} error: ${e?.message || e}`);
-              // کمی مکث و تلاش مجدد
-              await sleep(120);
+            const elapsed = Math.round((now - startTime) / 1000);
+            if (!chart.data.labels.includes(elapsed + "s")) {
+              chart.data.labels.push(elapsed + "s");
+              chart.data.datasets[0].data.push(speed);
+              chart.update("none");
             }
+
+            document.getElementById("downloadValue").textContent =
+              speed.toFixed(2);
+
+            lastBytes = sharedData.totalBytes;
+            lastTime = now;
           }
-        }
+        }, 500);
 
-        // تایمر محاسبه سرعت هر 250ms (پایدار و دقیق‌تر)
-        let lastTickMs = performance.now();
-        const tickTimer = setInterval(() => {
-          const now = performance.now();
-          const sec = (now - lastTickMs) / 1000;
-          if (sec <= 0) return;
+        await Promise.all(threads);
+        clearInterval(monitorInterval);
 
-          const speedMbps = (bytesSinceTick * 8) / (sec * 1e6);
-          bytesSinceTick = 0;
-          lastTickMs = now;
+        const totalTime = (Date.now() - startTime) / 1000;
+        const avgSpeed = (sharedData.totalBytes * 8) / totalTime / 1000000;
 
-          // اگر هنوز داده‌ای نیومده، چارت رو اسپم نکن
-          if (!isFinite(speedMbps)) return;
-
-          speeds.push(speedMbps);
-          document.getElementById("mainSpeed").textContent =
-            speedMbps.toFixed(2);
-          document.getElementById("download").textContent =
-            speedMbps.toFixed(2);
-          pushChartPoint(speedMbps, startMs);
-        }, 250);
-
-        // اجرای دانلودهای موازی
-        const workers = [];
-        for (let i = 0; i < PARALLEL; i++) workers.push(downloadWorker(i));
-
-        // منتظر پایان زمان
-        while (performance.now() - startMs < durationMs && isTestRunning) {
-          await sleep(80);
-        }
-
-        // توقف دانلودها
-        for (const c of controllers) {
-          try {
-            c.abort();
-          } catch {}
-        }
-
-        // پاک کردن تایمر
-        clearInterval(tickTimer);
-
-        // منتظر بسته شدن workerها
-        try {
-          await Promise.allSettled(workers);
-        } catch {}
-
-        // میانگین سرعت (میانگین چند نمونه آخر، نوسان کمتر)
-        if (speeds.length) {
-          const tail = speeds.slice(Math.max(0, speeds.length - 20)); // 20 تیک آخر
-          const avg = tail.reduce((a, b) => a + b, 0) / tail.length;
-          document.getElementById("download").textContent = avg.toFixed(2);
-          document.getElementById("mainSpeed").textContent = avg.toFixed(2);
-        } else {
-          document.getElementById("download").textContent = "0";
-          document.getElementById("mainSpeed").textContent = "0";
-        }
-
-        dbg("Download: done");
+        return avgSpeed;
       }
 
       async function startTest() {
         if (isTestRunning) return;
 
-        const btn = document.getElementById("startBtn");
-        const progress = document.getElementById("progress");
-
         isTestRunning = true;
-        btn.disabled = true;
+        const startBtn = document.getElementById("startBtn");
+        const status = document.getElementById("status");
 
-        document.getElementById("mainSpeed").textContent = "0";
-        document.getElementById("ping").textContent = "0";
-        document.getElementById("download").textContent = "0";
-        document.getElementById("jitter").textContent = "0";
-        progress.style.width = "0%";
+        startBtn.disabled = true;
 
-        chartData.labels = [];
-        chartData.datasets[0].data = [];
-        chart.update();
-
-        dbg("=== START TEST (NO UPLOAD) ===");
-        dbg("STATIC_ASSETS=GitHub Pages");
-        dbg("PING_URL=" + PING_URL);
-        dbg("DOWNLOAD_URL=" + DOWNLOAD_URL);
+        document.getElementById("pingValue").textContent = "-";
+        document.getElementById("jitterValue").textContent = "-";
+        document.getElementById("downloadValue").textContent = "-";
 
         try {
-          progress.style.width = "10%";
-          await measurePing();
-          progress.style.width = "35%";
+          status.innerHTML =
+            translations[currentLang].testingPing +
+            '<span class="loading"></span>';
+          const pingResult = await measurePing();
+          document.getElementById("pingValue").textContent = pingResult.ping;
+          document.getElementById("jitterValue").textContent =
+            pingResult.jitter;
 
-          await sleep(350);
+          await new Promise((resolve) => setTimeout(resolve, 500));
 
-          progress.style.width = "40%";
-          await measureDownload();
-          progress.style.width = "100%";
+          status.innerHTML =
+            translations[currentLang].testingDownload +
+            '<span class="loading"></span>';
+          const downloadSpeed = await measureDownload();
+          document.getElementById("downloadValue").textContent =
+            downloadSpeed.toFixed(2);
 
-          updateStatus(
-            "تست با موفقیت انجام شد!",
-            "Test completed successfully!"
-          );
-          dbg("=== DONE ===");
-        } catch (e) {
-          dbg("Test error: " + (e?.message || e));
-          updateStatus("خطا در انجام تست", "Error during test");
+          status.textContent = translations[currentLang].completed;
+        } catch (error) {
+          console.error("Test error:", error);
+          status.textContent = translations[currentLang].error;
+        } finally {
+          startBtn.disabled = false;
+          isTestRunning = false;
         }
-
-        isTestRunning = false;
-        btn.disabled = false;
       }
 
-      // init
-      getIP();
+      window.addEventListener("load", () => {
+        initChart();
+        updateServerInfo();
+      });
+
+      let resizeTimer;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          if (chart) {
+            chart.resize();
+          }
+        }, 250);
+      });
     </script>
   </body>
 </html>
